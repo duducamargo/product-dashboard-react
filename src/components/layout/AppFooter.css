@@ -1,11 +1,12 @@
 .app-footer {
   align-items: center;
-  background: transparent;
+  background: var(--surface);
   display: flex;
   justify-content: space-between;
   min-height: 100px;
   padding: 28px 20px 24px;
   width: 100%;
+  border-top: 1.5px solid var(--border);
 }
 
 .app-footer-brand {

@@ -1,8 +1,4 @@
 .login-page {
-  background:
-    radial-gradient(circle at 48% 0%, rgb(237 235 255 / 76%), transparent 35%),
-    linear-gradient(180deg, #f7f7fd 0%, #fbfbff 72%, #ffffff 72%, #ffffff 100%);
-  border-top: 5px solid #5a4ae8;
   display: flex;
   flex-direction: column;
   min-height: 100vh;
@@ -33,7 +29,7 @@
 .login-brand p {
   color: #777a8d;
   font-size: 0.95rem;
-  font-weight: 700;
+  font-weight: 500;
   margin: 0;
 }
 
@@ -54,8 +50,8 @@
 
 .login-heading h1 {
   color: var(--text-strong);
-  font-size: 1rem;
-  font-weight: 800;
+  font-size: 16px;
+  font-weight: 500;
   line-height: 1.25;
   margin-bottom: 11px;
 }
@@ -78,7 +74,7 @@
 .login-field > span {
   color: #727587;
   font-size: 0.92rem;
-  font-weight: 800;
+  font-weight: 500;
 }
 
 .input-control {
@@ -91,11 +87,7 @@
   gap: 16px;
   min-height: 57px;
   padding: 0 18px;
-}
-
-.input-control:focus-within {
-  border-color: #6b5cff;
-  box-shadow: 0 0 0 3px rgb(97 82 235 / 10%);
+  cursor: pointer;
 }
 
 .input-control input {
@@ -115,7 +107,7 @@
 .form-error {
   color: var(--danger);
   font-size: 0.84rem;
-  font-weight: 700;
+  font-weight: 500;
   margin: 0;
 }
 
@@ -131,7 +123,7 @@
   color: #777a8d;
   display: flex;
   font-size: 0.92rem;
-  font-weight: 800;
+  font-weight: 500;
   gap: 10px;
 }
 
@@ -146,7 +138,7 @@
   background: transparent;
   border: 0;
   color: #6456ff;
-  font-weight: 800;
+  font-weight: 500;
   padding: 0;
 }
 
@@ -158,7 +150,7 @@
   box-shadow: 0 8px 14px rgb(67 40 219 / 24%);
   color: #ffffff;
   display: inline-flex;
-  font-weight: 800;
+  font-weight: 500;
   gap: 8px;
   justify-content: center;
   margin-top: 4px;
@@ -181,7 +173,7 @@
 .signup-prompt {
   color: #777a8d;
   font-size: 0.94rem;
-  font-weight: 800;
+  font-weight: 500;
   margin: 0;
   text-align: center;
 }

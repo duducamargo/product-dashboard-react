@@ -1,10 +1,10 @@
 import "@/components/layout/AppFooter.css";
 
 const FOOTER_LINKS = [
-  { label: "Privacy", href: "/" },
-  { label: "Terms", href: "/" },
-  { label: "Support", href: "/" },
-  { label: "Docs", href: "/" },
+  { label: "Termos de Privacidade", href: "/" },
+  { label: "Termos de Uso", href: "/" },
+  { label: "Github", href: "/" },
+  { label: "Documentação", href: "/" },
 ] as const;
 
 export function AppFooter() {
@@ -36,7 +36,7 @@ export function AppFooter() {
           <strong>TechStore</strong>
         </div>
 
-        <p>&copy; 2024 TechStore. Powered by Precision Commerce Engine.</p>
+        <p>&copy; 2026 TechStore. Feito para ser rápido e confiável.</p>
       </div>
 
       <nav className="app-footer-nav" aria-label="Footer links">
