@@ -1,7 +1,7 @@
 import { Navigate, useLocation, useNavigate } from "react-router-dom";
-import { AuthIcon } from "@/components/auth/AuthIcon";
 import { LoginFeatureList } from "@/components/auth/LoginFeatureList";
 import { LoginForm } from "@/components/auth/LoginForm";
+import { AppFooter } from "@/components/layout/AppFooter";
 import { useAuth } from "@/hooks/useAuth";
 import type { LoginInput } from "@/schemas/loginSchema";
 
@@ -59,22 +59,7 @@ export function LoginPage() {
         <LoginFeatureList />
       </div>
 
-      <footer className="login-footer">
-        <div>
-          <strong>TechStore</strong>
-          <span>&copy; 2024 TechStore. Criado para velocidade e confiabilidade.</span>
-        </div>
-
-        <nav aria-label="Footer links">
-          <a href="/">Politica de Privacidade</a>
-          <a href="/">Termos de Uso</a>
-          <a href="/">
-            <AuthIcon name="github" size={14} />
-            <span>Github</span>
-          </a>
-          <a href="/">Documentacao</a>
-        </nav>
-      </footer>
+      <AppFooter />
     </main>
   );
 }
