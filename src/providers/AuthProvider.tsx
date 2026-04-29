@@ -20,9 +20,8 @@ export function AuthProvider({ children }: PropsWithChildren) {
     async (input: LoginInput) => {
       const nextSession = await authService.login(input);
       setSession(nextSession);
-      navigate("/home", { replace: true });
     },
-    [navigate]
+    []
   );
 
   const signOut = useCallback(() => {
