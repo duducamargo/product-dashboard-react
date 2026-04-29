@@ -22,6 +22,17 @@ npm run dev
 
 Caso precise alterar a URL da API, crie um `.env` com base no `.env.example`.
 
+## Login de teste
+
+A autenticacao usa a API publica da DummyJSON.
+
+Credenciais validas para desenvolvimento:
+
+```txt
+usuario: emilys
+senha: emilyspass
+```
+
 ## Scripts
 
 - `npm run dev`: inicia o projeto em modo desenvolvimento.
@@ -48,6 +59,14 @@ src/
 
 ## Proximos passos
 
-1. Configurar `QueryClientProvider`, `BrowserRouter` e `AuthProvider`.
-2. Criar o service da DummyJSON para autenticacao e produtos.
-3. Implementar as paginas de login, home, detalhes do produto e not found.
+1. Implementar a listagem de produtos na rota `/home`.
+2. Criar filtros por nome, categoria e faixa de preco.
+3. Implementar a pagina de detalhes do produto em `/products/:id`.
+
+## Decisoes tecnicas iniciais
+
+- O login usa React Hook Form com Zod para validacao do formulario.
+- A sessao autenticada fica centralizada no `AuthProvider`.
+- Os tokens retornados pela DummyJSON sao persistidos no `localStorage`.
+- O `accessToken` e enviado automaticamente pelo interceptor do Axios.
+- A renovacao de sessao foi isolada no service de auth usando `/auth/refresh`.
