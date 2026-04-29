@@ -1,25 +1,14 @@
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
 import { Navigate, useLocation, useNavigate } from "react-router-dom";
+import { AuthIcon } from "@/components/auth/AuthIcon";
+import { LoginFeatureList } from "@/components/auth/LoginFeatureList";
+import { LoginForm } from "@/components/auth/LoginForm";
 import { useAuth } from "@/hooks/useAuth";
-import { loginSchema, type LoginInput } from "@/schemas/loginSchema";
+import type { LoginInput } from "@/schemas/loginSchema";
 
 export function LoginPage() {
   const { isAuthenticated, signIn } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
-  const {
-    register,
-    handleSubmit,
-    setError,
-    formState: { errors, isSubmitting },
-  } = useForm<LoginInput>({
-    resolver: zodResolver(loginSchema),
-    defaultValues: {
-      username: "",
-      password: "",
-    },
-  });
 
   const redirectTo =
     typeof location.state === "object" &&
@@ -32,15 +21,9 @@ export function LoginPage() {
       ? location.state.from.pathname
       : "/home";
 
-  async function onSubmit(input: LoginInput) {
-    try {
-      await signIn(input);
-      navigate(redirectTo, { replace: true });
-    } catch {
-      setError("root", {
-        message: "Usuario ou senha invalidos.",
-      });
-    }
+  async function handleLogin(input: LoginInput) {
+    await signIn(input);
+    navigate(redirectTo, { replace: true });
   }
 
   if (isAuthenticated) {
@@ -49,43 +32,49 @@ export function LoginPage() {
 
   return (
     <main className="login-page">
-      <section className="login-card" aria-labelledby="login-title">
-        <div className="login-heading">
-          <p className="eyebrow">Product Dashboard</p>
-          <h1 id="login-title">Acesse sua conta</h1>
-          <p>Use as credenciais da DummyJSON para iniciar a sessao.</p>
+      <div className="login-content">
+        <header className="login-brand">
+          <strong>TechStore</strong>
+          <p>The reliable choice for professional hardware.</p>
+        </header>
+
+        <section className="login-card" aria-labelledby="login-title">
+          <div className="login-heading">
+            <h1 id="login-title">Welcome back</h1>
+            <p>Enter your credentials to access your account.</p>
+          </div>
+
+          <LoginForm onSubmit={handleLogin} />
+
+          <div className="login-divider" />
+
+          <p className="signup-prompt">
+            Don't have an account?{" "}
+            <button className="link-button" type="button">
+              Create account
+            </button>
+          </p>
+        </section>
+
+        <LoginFeatureList />
+      </div>
+
+      <footer className="login-footer">
+        <div>
+          <strong>TechStore</strong>
+          <span>&copy; 2024 TechStore. Built for speed and reliability.</span>
         </div>
 
-        <form className="login-form" onSubmit={handleSubmit(onSubmit)} noValidate>
-          <label className="field">
-            <span>Usuario</span>
-            <input
-              type="text"
-              autoComplete="username"
-              placeholder="ex: emilys"
-              {...register("username")}
-            />
-            {errors.username ? <small>{errors.username.message}</small> : null}
-          </label>
-
-          <label className="field">
-            <span>Senha</span>
-            <input
-              type="password"
-              autoComplete="current-password"
-              placeholder="ex: emilyspass"
-              {...register("password")}
-            />
-            {errors.password ? <small>{errors.password.message}</small> : null}
-          </label>
-
-          {errors.root ? <p className="form-error">{errors.root.message}</p> : null}
-
-          <button className="button-primary" type="submit" disabled={isSubmitting}>
-            {isSubmitting ? "Entrando..." : "Entrar"}
-          </button>
-        </form>
-      </section>
+        <nav aria-label="Footer links">
+          <a href="/">Privacy Policy</a>
+          <a href="/">Terms of Service</a>
+          <a href="/">
+            <AuthIcon name="github" size={14} />
+            <span>Github</span>
+          </a>
+          <a href="/">Documentation</a>
+        </nav>
+      </footer>
     </main>
   );
 }
