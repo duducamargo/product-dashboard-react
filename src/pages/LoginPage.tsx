@@ -4,6 +4,7 @@ import { LoginForm } from "@/components/auth/LoginForm";
 import { AppFooter } from "@/components/layout/AppFooter";
 import { useAuth } from "@/hooks/useAuth";
 import type { LoginInput } from "@/schemas/loginSchema";
+import techstoreIconUrl from "@/assets/techstore-icon.svg";
 import "@/pages/LoginPage.css";
 
 export function LoginPage() {
@@ -13,12 +14,12 @@ export function LoginPage() {
 
   const redirectTo =
     typeof location.state === "object" &&
-    location.state !== null &&
-    "from" in location.state &&
-    typeof location.state.from === "object" &&
-    location.state.from !== null &&
-    "pathname" in location.state.from &&
-    typeof location.state.from.pathname === "string"
+      location.state !== null &&
+      "from" in location.state &&
+      typeof location.state.from === "object" &&
+      location.state.from !== null &&
+      "pathname" in location.state.from &&
+      typeof location.state.from.pathname === "string"
       ? location.state.from.pathname
       : "/home";
 
@@ -35,7 +36,10 @@ export function LoginPage() {
     <main className="login-page">
       <div className="login-content">
         <header className="login-brand">
-          <strong>TechStore</strong>
+          <div className="login-logo-container">
+            <img className="app-login-logo" src={techstoreIconUrl} alt="" aria-hidden="true" />
+            <strong>TechStore</strong>
+          </div>
           <p>A escolha confiavel para hardware profissional.</p>
         </header>
 

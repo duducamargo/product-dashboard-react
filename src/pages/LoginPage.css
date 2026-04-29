@@ -13,6 +13,14 @@
   width: 100%;
 }
 
+.login-logo-container {
+  display: flex;
+  justify-self: center;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
 .login-brand {
   margin-bottom: 28px;
   text-align: center;
@@ -23,7 +31,6 @@
   display: block;
   font-size: 0.95rem;
   font-weight: 800;
-  margin-bottom: 8px;
 }
 
 .login-brand p {
@@ -100,7 +107,7 @@
 
 .input-control input::placeholder {
   color: #c2c4d1;
-  font-weight: 700;
+  font-weight: 500;
 }
 
 .login-field small,
@@ -119,6 +126,7 @@
 }
 
 .remember-option {
+  margin: 10px 0;
   align-items: center;
   color: #777a8d;
   display: flex;
@@ -129,9 +137,9 @@
 
 .remember-option input {
   accent-color: var(--primary);
-  height: 20px;
+  height: 16px;
   margin: 0;
-  width: 20px;
+  width: 16px;
 }
 
 .link-button {
