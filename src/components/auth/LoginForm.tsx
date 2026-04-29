@@ -61,16 +61,6 @@ export function LoginForm({ onSubmit }: LoginFormProps) {
         {errors.password ? <small>{errors.password.message}</small> : null}
       </label>
 
-      <div className="login-options">
-        <label className="remember-option">
-          <input type="checkbox" />
-          <span>Lembrar de mim</span>
-        </label>
-        <button className="link-button" type="button">
-          Esqueceu a senha?
-        </button>
-      </div>
-
       {errors.root ? <p className="form-error">{errors.root.message}</p> : null}
 
       <button className="login-submit" type="submit" disabled={isSubmitting}>

@@ -118,30 +118,6 @@
   margin: 0;
 }
 
-.login-options {
-  align-items: center;
-  display: flex;
-  justify-content: space-between;
-  margin-top: -2px;
-}
-
-.remember-option {
-  margin: 10px 0;
-  align-items: center;
-  color: #777a8d;
-  display: flex;
-  font-size: 0.92rem;
-  font-weight: 500;
-  gap: 10px;
-}
-
-.remember-option input {
-  accent-color: var(--primary);
-  height: 16px;
-  margin: 0;
-  width: 16px;
-}
-
 .link-button {
   background: transparent;
   border: 0;
@@ -210,12 +186,6 @@
 @media (max-width: 480px) {
   .login-card {
     padding: 24px 20px;
-  }
-
-  .login-options {
-    align-items: flex-start;
-    flex-direction: column;
-    gap: 18px;
   }
 
   .login-features {
