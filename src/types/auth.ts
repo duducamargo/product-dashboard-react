@@ -9,7 +9,8 @@ export type AuthUser = {
 
 export type AuthSession = {
   accessToken: string;
-  refreshToken: string;
+  refreshToken?: string;
+  provider: "dummyjson" | "local";
   user: AuthUser;
 };
 

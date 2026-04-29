@@ -1,21 +1,17 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { AuthIcon } from "@/components/auth/AuthIcon";
 import { registerSchema, type RegisterInput } from "@/schemas/registerSchema";
-import type { CreatedUser } from "@/types/user";
 import "@/components/auth/AuthForm.css";
 
 type RegisterFormProps = {
-  onSubmit: (input: RegisterInput) => Promise<CreatedUser>;
+  onSubmit: (input: RegisterInput) => Promise<void>;
 };
 
 export function RegisterForm({ onSubmit }: RegisterFormProps) {
-  const [createdUser, setCreatedUser] = useState<CreatedUser | null>(null);
   const {
     register,
     handleSubmit,
-    reset,
     setError,
     formState: { errors, isSubmitting },
   } = useForm<RegisterInput>({
@@ -32,12 +28,8 @@ export function RegisterForm({ onSubmit }: RegisterFormProps) {
   });
 
   async function submit(input: RegisterInput) {
-    setCreatedUser(null);
-
     try {
-      const user = await onSubmit(input);
-      setCreatedUser(user);
-      reset();
+      await onSubmit(input);
     } catch {
       setError("root", {
         message: "Nao foi possivel criar a conta. Tente novamente.",
@@ -47,25 +39,23 @@ export function RegisterForm({ onSubmit }: RegisterFormProps) {
 
   return (
     <form className="auth-form" onSubmit={handleSubmit(submit)} noValidate>
-      <div className="auth-field-row">
-        <label className="auth-field">
-          <span>Nome</span>
-          <div className="input-control">
-            <AuthIcon name="user" size={18} />
-            <input type="text" autoComplete="given-name" placeholder="Maria" {...register("firstName")} />
-          </div>
-          {errors.firstName ? <small>{errors.firstName.message}</small> : null}
-        </label>
+      <label className="auth-field">
+        <span>Nome</span>
+        <div className="input-control">
+          <AuthIcon name="user" size={18} />
+          <input type="text" autoComplete="given-name" placeholder="Maria" {...register("firstName")} />
+        </div>
+        {errors.firstName ? <small>{errors.firstName.message}</small> : null}
+      </label>
 
-        <label className="auth-field">
-          <span>Sobrenome</span>
-          <div className="input-control">
-            <AuthIcon name="user" size={18} />
-            <input type="text" autoComplete="family-name" placeholder="Silva" {...register("lastName")} />
-          </div>
-          {errors.lastName ? <small>{errors.lastName.message}</small> : null}
-        </label>
-      </div>
+      <label className="auth-field">
+        <span>Sobrenome</span>
+        <div className="input-control">
+          <AuthIcon name="user" size={18} />
+          <input type="text" autoComplete="family-name" placeholder="Silva" {...register("lastName")} />
+        </div>
+        {errors.lastName ? <small>{errors.lastName.message}</small> : null}
+      </label>
 
       <label className="auth-field">
         <span>Usuario</span>
@@ -118,11 +108,6 @@ export function RegisterForm({ onSubmit }: RegisterFormProps) {
       </label>
 
       {errors.root ? <p className="form-error">{errors.root.message}</p> : null}
-      {createdUser ? (
-        <p className="form-success">
-          Conta simulada criada para {createdUser.firstName} com id {createdUser.id}.
-        </p>
-      ) : null}
 
       <button className="auth-submit" type="submit" disabled={isSubmitting}>
         <span>{isSubmitting ? "Criando conta..." : "Criar conta"}</span>

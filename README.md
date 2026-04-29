@@ -37,7 +37,7 @@ senha: emilyspass
 
 A rota `/register` usa `POST /users/add` da DummyJSON para simular a criacao de um usuario.
 
-Importante: a DummyJSON retorna o usuario criado com um novo `id`, mas nao persiste esse usuario no servidor e nao gera uma sessao autenticada automaticamente.
+Importante: a DummyJSON retorna o usuario criado com um novo `id`, mas nao persiste esse usuario no servidor e nao gera uma sessao autenticada automaticamente. Por isso, a aplicacao salva a conta criada no `localStorage` e gera um token local para permitir acesso as rotas protegidas da propria aplicacao.
 
 ## Scripts
 
@@ -73,6 +73,7 @@ src/
 
 - O login usa React Hook Form com Zod para validacao do formulario.
 - O cadastro tambem usa React Hook Form com Zod e consome `/users/add`.
+- Contas criadas via cadastro podem acessar a aplicacao com token local.
 - A sessao autenticada fica centralizada no `AuthProvider`.
 - Os tokens retornados pela DummyJSON sao persistidos no `localStorage`.
 - O `accessToken` e enviado automaticamente pelo interceptor do Axios.

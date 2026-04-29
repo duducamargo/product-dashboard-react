@@ -1,12 +1,17 @@
-import { Navigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import { AuthPageLayout } from "@/components/auth/AuthPageLayout";
 import { RegisterForm } from "@/components/auth/RegisterForm";
 import { useAuth } from "@/hooks/useAuth";
 import type { RegisterInput } from "@/schemas/registerSchema";
-import { usersService } from "@/services/usersService";
 
 export function RegisterPage() {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, signUp } = useAuth();
+  const navigate = useNavigate();
+
+  async function handleRegister(input: RegisterInput) {
+    await signUp(input);
+    navigate("/home", { replace: true });
+  }
 
   if (isAuthenticated) {
     return <Navigate to="/home" replace />;
@@ -15,12 +20,12 @@ export function RegisterPage() {
   return (
     <AuthPageLayout
       title="Crie sua conta"
-      description="Cadastre um usuario para simular o acesso na DummyJSON."
+      description="Cadastre um usuario para acessar a aplicacao com token local."
       prompt="Ja tem uma conta?"
       promptActionLabel="Entrar"
       promptActionTo="/"
     >
-      <RegisterForm onSubmit={(input: RegisterInput) => usersService.create(input)} />
+      <RegisterForm onSubmit={handleRegister} />
     </AuthPageLayout>
   );
 }
