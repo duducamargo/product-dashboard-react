@@ -3,7 +3,6 @@ import type { PropsWithChildren } from "react";
 import { useNavigate } from "react-router-dom";
 import { AuthContext, type AuthContextValue } from "@/providers/AuthContext";
 import type { LoginInput } from "@/schemas/loginSchema";
-import type { RegisterInput } from "@/schemas/registerSchema";
 import { authService } from "@/services/authService";
 import type { AuthSession } from "@/types/auth";
 import { authStorage } from "@/utils/authStorage";
@@ -20,14 +19,6 @@ export function AuthProvider({ children }: PropsWithChildren) {
   const signIn = useCallback(
     async (input: LoginInput) => {
       const nextSession = await authService.login(input);
-      setSession(nextSession);
-    },
-    []
-  );
-
-  const signUp = useCallback(
-    async (input: RegisterInput) => {
-      const nextSession = await authService.register(input);
       setSession(nextSession);
     },
     []
@@ -62,11 +53,10 @@ export function AuthProvider({ children }: PropsWithChildren) {
       isSessionLoading,
       user: session?.user ?? null,
       signIn,
-      signUp,
       signOut,
       refreshSession,
     }),
-    [isSessionLoading, refreshSession, session?.accessToken, session?.user, signIn, signOut, signUp]
+    [isSessionLoading, refreshSession, session?.accessToken, session?.user, signIn, signOut]
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

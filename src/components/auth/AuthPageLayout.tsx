@@ -1,4 +1,3 @@
-import { Link } from "react-router-dom";
 import type { ReactNode } from "react";
 import { LoginFeatureList } from "@/components/auth/LoginFeatureList";
 import { AppFooter } from "@/components/layout/AppFooter";
@@ -9,9 +8,9 @@ type AuthPageLayoutProps = {
   title: string;
   description: string;
   children: ReactNode;
-  prompt: string;
-  promptActionLabel: string;
-  promptActionTo: string;
+  prompt?: string;
+  promptActionLabel?: string;
+  promptActionTo?: string;
 };
 
 export function AuthPageLayout({
@@ -41,14 +40,15 @@ export function AuthPageLayout({
 
           {children}
 
-          <div className="auth-divider" />
+          {prompt && promptActionLabel && promptActionTo ? (
+            <>
+              <div className="auth-divider" />
 
-          <p className="auth-prompt">
-            {prompt}{" "}
-            <Link className="link-button" to={promptActionTo}>
-              {promptActionLabel}
-            </Link>
-          </p>
+              <p className="auth-prompt">
+                {prompt} <a className="link-button" href={promptActionTo}>{promptActionLabel}</a>
+              </p>
+            </>
+          ) : null}
         </section>
 
         <LoginFeatureList />

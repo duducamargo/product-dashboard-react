@@ -33,9 +33,6 @@ export function LoginPage() {
     <AuthPageLayout
       title="Bem-vindo de volta"
       description="Informe suas credenciais para acessar sua conta."
-      prompt="Ainda nao tem uma conta?"
-      promptActionLabel="Criar conta"
-      promptActionTo="/register"
     >
       <LoginForm onSubmit={handleLogin} />
     </AuthPageLayout>
