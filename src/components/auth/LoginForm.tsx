@@ -26,7 +26,7 @@ export function LoginForm({ onSubmit }: LoginFormProps) {
       await onSubmit(input);
     } catch {
       setError("root", {
-        message: "Invalid username or password.",
+        message: "Usuario ou senha invalidos.",
       });
     }
   }
@@ -34,7 +34,7 @@ export function LoginForm({ onSubmit }: LoginFormProps) {
   return (
     <form className="login-form" onSubmit={handleSubmit(submit)} noValidate>
       <label className="login-field">
-        <span>Username</span>
+        <span>Usuario</span>
         <div className="input-control">
           <AuthIcon name="user" size={18} />
           <input
@@ -48,7 +48,7 @@ export function LoginForm({ onSubmit }: LoginFormProps) {
       </label>
 
       <label className="login-field">
-        <span>Password</span>
+        <span>Senha</span>
         <div className="input-control">
           <AuthIcon name="lock" size={18} />
           <input
@@ -64,17 +64,17 @@ export function LoginForm({ onSubmit }: LoginFormProps) {
       <div className="login-options">
         <label className="remember-option">
           <input type="checkbox" />
-          <span>Remember me</span>
+          <span>Lembrar de mim</span>
         </label>
         <button className="link-button" type="button">
-          Forgot password?
+          Esqueceu a senha?
         </button>
       </div>
 
       {errors.root ? <p className="form-error">{errors.root.message}</p> : null}
 
       <button className="login-submit" type="submit" disabled={isSubmitting}>
-        <span>{isSubmitting ? "Logging in..." : "Login"}</span>
+        <span>{isSubmitting ? "Entrando..." : "Entrar"}</span>
         <AuthIcon name="login" size={17} />
       </button>
     </form>

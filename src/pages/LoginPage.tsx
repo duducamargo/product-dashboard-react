@@ -35,13 +35,13 @@ export function LoginPage() {
       <div className="login-content">
         <header className="login-brand">
           <strong>TechStore</strong>
-          <p>The reliable choice for professional hardware.</p>
+          <p>A escolha confiavel para hardware profissional.</p>
         </header>
 
         <section className="login-card" aria-labelledby="login-title">
           <div className="login-heading">
-            <h1 id="login-title">Welcome back</h1>
-            <p>Enter your credentials to access your account.</p>
+            <h1 id="login-title">Bem-vindo de volta</h1>
+            <p>Informe suas credenciais para acessar sua conta.</p>
           </div>
 
           <LoginForm onSubmit={handleLogin} />
@@ -49,9 +49,9 @@ export function LoginPage() {
           <div className="login-divider" />
 
           <p className="signup-prompt">
-            Don't have an account?{" "}
+            Ainda nao tem uma conta?{" "}
             <button className="link-button" type="button">
-              Create account
+              Criar conta
             </button>
           </p>
         </section>
@@ -62,17 +62,17 @@ export function LoginPage() {
       <footer className="login-footer">
         <div>
           <strong>TechStore</strong>
-          <span>&copy; 2024 TechStore. Built for speed and reliability.</span>
+          <span>&copy; 2024 TechStore. Criado para velocidade e confiabilidade.</span>
         </div>
 
         <nav aria-label="Footer links">
-          <a href="/">Privacy Policy</a>
-          <a href="/">Terms of Service</a>
+          <a href="/">Politica de Privacidade</a>
+          <a href="/">Termos de Uso</a>
           <a href="/">
             <AuthIcon name="github" size={14} />
             <span>Github</span>
           </a>
-          <a href="/">Documentation</a>
+          <a href="/">Documentacao</a>
         </nav>
       </footer>
     </main>
