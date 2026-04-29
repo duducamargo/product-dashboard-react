@@ -1,3 +1,5 @@
+import "@/components/layout/AppFooter.css";
+
 const FOOTER_LINKS = [
   { label: "Privacy", href: "/" },
   { label: "Terms", href: "/" },

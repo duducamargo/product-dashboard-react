@@ -1,4 +1,5 @@
 import { useAuth } from "@/hooks/useAuth";
+import "@/pages/HomePage.css";
 
 export function HomePage() {
   const { user, signOut } = useAuth();

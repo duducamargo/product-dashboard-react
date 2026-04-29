@@ -4,6 +4,7 @@ import { LoginForm } from "@/components/auth/LoginForm";
 import { AppFooter } from "@/components/layout/AppFooter";
 import { useAuth } from "@/hooks/useAuth";
 import type { LoginInput } from "@/schemas/loginSchema";
+import "@/pages/LoginPage.css";
 
 export function LoginPage() {
   const { isAuthenticated, signIn } = useAuth();
