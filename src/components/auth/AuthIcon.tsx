@@ -1,4 +1,13 @@
-type AuthIconName = "github" | "login" | "lock" | "privacy" | "shield" | "speed" | "spark" | "user";
+type AuthIconName =
+  | "github"
+  | "login"
+  | "lock"
+  | "mail"
+  | "privacy"
+  | "shield"
+  | "speed"
+  | "spark"
+  | "user";
 
 type AuthIconProps = {
   name: AuthIconName;
@@ -39,6 +48,13 @@ export function AuthIcon({ name, size = 18 }: AuthIconProps) {
         <svg {...commonProps}>
           <rect height="11" rx="2" width="14" x="5" y="11" />
           <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+        </svg>
+      );
+    case "mail":
+      return (
+        <svg {...commonProps}>
+          <rect height="16" rx="2" width="20" x="2" y="4" />
+          <path d="m22 7-10 6L2 7" />
         </svg>
       );
     case "privacy":

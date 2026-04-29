@@ -2,6 +2,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { AuthIcon } from "@/components/auth/AuthIcon";
 import { loginSchema, type LoginInput } from "@/schemas/loginSchema";
+import "@/components/auth/AuthForm.css";
 
 type LoginFormProps = {
   onSubmit: (input: LoginInput) => Promise<void>;
@@ -32,8 +33,8 @@ export function LoginForm({ onSubmit }: LoginFormProps) {
   }
 
   return (
-    <form className="login-form" onSubmit={handleSubmit(submit)} noValidate>
-      <label className="login-field">
+    <form className="auth-form" onSubmit={handleSubmit(submit)} noValidate>
+      <label className="auth-field">
         <span>Usuario</span>
         <div className="input-control">
           <AuthIcon name="user" size={18} />
@@ -47,7 +48,7 @@ export function LoginForm({ onSubmit }: LoginFormProps) {
         {errors.username ? <small>{errors.username.message}</small> : null}
       </label>
 
-      <label className="login-field">
+      <label className="auth-field">
         <span>Senha</span>
         <div className="input-control">
           <AuthIcon name="lock" size={18} />
@@ -63,7 +64,7 @@ export function LoginForm({ onSubmit }: LoginFormProps) {
 
       {errors.root ? <p className="form-error">{errors.root.message}</p> : null}
 
-      <button className="login-submit" type="submit" disabled={isSubmitting}>
+      <button className="auth-submit" type="submit" disabled={isSubmitting}>
         <span>{isSubmitting ? "Entrando..." : "Entrar"}</span>
         <AuthIcon name="login" size={17} />
       </button>
