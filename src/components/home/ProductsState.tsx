@@ -20,9 +20,8 @@ export function ProductsState({
       <section className="state-card state-card-empty" role={role}>
         <div className="empty-state-illustration" aria-hidden="true">
           <span className="empty-box">
-            <span className="empty-box-lid" />
-            <span className="empty-box-body" />
-            <span className="empty-box-label" />
+            <span className="empty-box-top" />
+            <span className="empty-box-line" />
           </span>
         </div>
         <h2>{title}</h2>

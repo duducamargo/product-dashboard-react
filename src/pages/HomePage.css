@@ -868,62 +868,42 @@
 
 .empty-box {
   display: block;
-  height: 92px;
+  height: 112px;
   position: relative;
-  width: 96px;
+  width: 134px;
 }
 
-.empty-box-lid {
-  background: var(--primary);
-  border-radius: 4px 4px 0 0;
-  height: 20px;
-  left: 26px;
+.empty-box::before {
+  border: 6px solid var(--primary);
+  border-radius: 0 0 10px 10px;
+  border-top: 0;
+  bottom: 0;
+  content: "";
+  height: 88px;
+  left: 8px;
   position: absolute;
-  top: 0;
-  width: 44px;
+  right: 8px;
 }
 
-.empty-box-body {
+.empty-box-top {
   background: #ffffff;
   border: 6px solid var(--primary);
-  border-radius: 8px;
-  bottom: 0;
-  height: 70px;
+  border-radius: 10px;
+  height: 42px;
   left: 0;
   position: absolute;
-  width: 96px;
+  right: 0;
+  top: 0;
+  z-index: 1;
 }
 
-.empty-box-body::before,
-.empty-box-body::after {
+.empty-box-line {
   background: var(--primary);
-  content: "";
-  position: absolute;
-}
-
-.empty-box-body::before {
   height: 6px;
-  left: 17px;
-  right: 17px;
-  top: 24px;
-}
-
-.empty-box-body::after {
-  height: 6px;
-  left: -6px;
-  right: -6px;
-  top: -6px;
-}
-
-.empty-box-label {
-  background: #edeaff;
-  border: 3px solid var(--primary);
-  border-radius: 4px;
-  bottom: 15px;
-  height: 16px;
-  left: 29px;
+  left: 48px;
   position: absolute;
-  width: 38px;
+  top: 70px;
+  width: 40px;
 }
 
 .pagination {
