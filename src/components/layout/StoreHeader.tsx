@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { ProductSearchCombobox } from "@/components/product/ProductSearchCombobox";
 import { Link } from "react-router-dom";
 import techstoreIconUrl from "@/assets/techstore-icon.svg";
 import type { Product } from "@/types/product";
@@ -13,21 +14,6 @@ type StoreHeaderProps = {
     onSelect: (product: Product) => void;
   };
 };
-
-function SearchIcon() {
-  return (
-    <svg aria-hidden="true" viewBox="0 0 24 24" focusable="false">
-      <path
-        d="m21 21-4.35-4.35m1.35-5.65a7 7 0 1 1-14 0 7 7 0 0 1 14 0Z"
-        fill="none"
-        stroke="currentColor"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth="2"
-      />
-    </svg>
-  );
-}
 
 function LogoutIcon() {
   return (
@@ -78,15 +64,7 @@ function UserIcon() {
 }
 
 export function StoreHeader({ onSignOut, search }: StoreHeaderProps) {
-  const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
-  const hasSearchValue = Boolean(search?.value.trim());
-  const shouldShowSuggestions = Boolean(search && hasSearchValue && isSearchOpen);
-
-  function handleSuggestionSelect(product: Product) {
-    search?.onSelect(product);
-    setIsSearchOpen(false);
-  }
 
   return (
     <header className={search ? "store-header store-header-with-search" : "store-header"}>
@@ -96,70 +74,15 @@ export function StoreHeader({ onSignOut, search }: StoreHeaderProps) {
       </Link>
 
       {search ? (
-        <div
+        <ProductSearchCombobox
           className="header-search"
-          onBlur={() => window.setTimeout(() => setIsSearchOpen(false), 120)}
-        >
-          <label className="header-search-field">
-            <span className="sr-only">Buscar produtos</span>
-            <span className="header-search-icon">
-              <SearchIcon />
-            </span>
-            <input
-              type="search"
-              placeholder="Buscar produtos..."
-              value={search.value}
-              onChange={(event) => {
-                search.onChange(event.target.value);
-                setIsSearchOpen(true);
-              }}
-              onFocus={() => setIsSearchOpen(true)}
-              autoComplete="off"
-              aria-autocomplete="list"
-              aria-expanded={shouldShowSuggestions}
-              aria-controls="header-search-suggestions"
-            />
-          </label>
-
-          {shouldShowSuggestions ? (
-            <div
-              className="header-search-popover"
-              id="header-search-suggestions"
-              role="listbox"
-              aria-label="Sugestoes de produtos"
-            >
-              {search.isLoading ? (
-                <span className="header-search-status">Buscando produtos...</span>
-              ) : null}
-
-              {!search.isLoading && search.suggestions.length === 0 ? (
-                <span className="header-search-status">Nenhum produto encontrado</span>
-              ) : null}
-
-              {!search.isLoading
-                ? search.suggestions.map((product) => (
-                    <button
-                      className="header-search-option"
-                      key={product.id}
-                      type="button"
-                      role="option"
-                      onMouseDown={(event) => event.preventDefault()}
-                      onClick={() => handleSuggestionSelect(product)}
-                    >
-                      <img src={product.thumbnail} alt="" aria-hidden="true" />
-                      <span>
-                        <strong>{product.title}</strong>
-                        <small>{product.category}</small>
-                      </span>
-                      <em aria-label={`Avaliacao ${product.rating.toFixed(1)}`}>
-                        {"\u2605"} {product.rating.toFixed(1)}
-                      </em>
-                    </button>
-                  ))
-                : null}
-            </div>
-          ) : null}
-        </div>
+          id="header-search-suggestions"
+          isLoading={search.isLoading}
+          suggestions={search.suggestions}
+          value={search.value}
+          onChange={search.onChange}
+          onSelect={search.onSelect}
+        />
       ) : null}
 
       <div

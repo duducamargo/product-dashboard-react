@@ -8,6 +8,7 @@ import { ProductsState } from "@/components/home/ProductsState";
 import { ProductsSummary } from "@/components/home/ProductsSummary";
 import { AppFooter } from "@/components/layout/AppFooter";
 import { StoreHeader } from "@/components/layout/StoreHeader";
+import { ProductSearchCombobox } from "@/components/product/ProductSearchCombobox";
 import { useAuth } from "@/hooks/useAuth";
 import {
   PRODUCTS_PAGE_SIZE,
@@ -93,6 +94,16 @@ export function HomePage() {
         <HomeHero />
 
         <div className="catalog-layout">
+          <ProductSearchCombobox
+            className="mobile-product-search"
+            id="mobile-product-search-suggestions"
+            isLoading={suggestionsQuery.isLoading || suggestionsQuery.isSearching}
+            suggestions={suggestionsQuery.data ?? []}
+            value={search}
+            onChange={setSearch}
+            onSelect={(product) => setSearch(product.title)}
+          />
+
           <ProductFilters
             categories={categoriesQuery.data ?? []}
             category={category}
