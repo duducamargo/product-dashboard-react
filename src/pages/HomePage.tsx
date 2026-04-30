@@ -214,14 +214,6 @@ export function HomePage() {
                       {products.map((product) => (
                         <article className="product-card" key={product.id}>
                           <div className="product-image-wrap">
-                            <span className="stock-badge">In stock</span>
-                            <button
-                              className="favorite-button"
-                              type="button"
-                              aria-label={`Adicionar ${product.title} aos favoritos`}
-                            >
-                              ♡
-                            </button>
                             <img src={product.thumbnail} alt={product.title} loading="lazy" />
                           </div>
                           <div className="product-card-content">
@@ -237,7 +229,7 @@ export function HomePage() {
                               {currencyFormatter.format(product.price)}
                             </strong>
                             <Link className="details-button" to={`/products/${product.id}`}>
-                              View Details
+                              Ver Detalhes
                             </Link>
                           </div>
                         </article>
