@@ -876,9 +876,21 @@
 @media (max-width: 760px) {
   .store-header {
     flex-wrap: wrap;
-    gap: 12px 18px;
-    padding: 12px 16px;
-    position: static;
+    gap: 10px 12px;
+    min-height: auto;
+    padding: 10px 14px 12px;
+    position: sticky;
+    top: 0;
+  }
+
+  .store-brand {
+    font-size: 1.08rem;
+    gap: 8px;
+  }
+
+  .store-brand-icon {
+    height: 26px;
+    width: 26px;
   }
 
   .header-search {
@@ -888,12 +900,32 @@
     order: 3;
   }
 
+  .header-search-field input {
+    border-radius: 9px;
+    min-height: 42px;
+    padding-left: 42px;
+  }
+
+  .header-search-icon {
+    left: 13px;
+  }
+
   .header-search-popover {
-    position: static;
+    left: 0;
+    max-height: min(360px, calc(100vh - 132px));
+    overflow: auto;
+    position: absolute;
+    right: 0;
   }
 
   .header-user-menu {
     margin-left: auto;
+  }
+
+  .header-avatar-button {
+    height: 42px;
+    min-height: 42px;
+    width: 42px;
   }
 
   .header-user-popover {
