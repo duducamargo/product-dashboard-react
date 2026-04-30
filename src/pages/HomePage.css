@@ -862,15 +862,15 @@
   justify-content: center;
   position: absolute;
   right: 16px;
-  top: 16px;
+  top: 8px;
   width: 18px;
 }
 
 .empty-box {
   display: block;
-  height: 112px;
+  height: 100px;
   position: relative;
-  width: 134px;
+  width: 112px;
 }
 
 .empty-box::before {
@@ -889,7 +889,7 @@
   background: #ffffff;
   border: 6px solid var(--primary);
   border-radius: 10px;
-  height: 42px;
+  height: 32px;
   left: 0;
   position: absolute;
   right: 0;

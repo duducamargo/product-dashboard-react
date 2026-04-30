@@ -28,7 +28,7 @@ export function ProductsPagination({
   onPageChange,
 }: ProductsPaginationProps) {
   return (
-    <nav className="pagination" aria-label="Paginacao de produtos">
+    <nav className="pagination" aria-label="Paginação de produtos">
       <button
         className="pagination-button pagination-arrow"
         type="button"
