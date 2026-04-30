@@ -23,6 +23,7 @@ export function HomePage() {
   const { signOut } = useAuth();
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("");
+  const [isCategoryFilterOpen, setIsCategoryFilterOpen] = useState(true);
   const [minPrice, setMinPrice] = useState("");
   const [maxPrice, setMaxPrice] = useState("");
   const [page, setPage] = useState(1);
@@ -95,31 +96,51 @@ export function HomePage() {
               />
             </label>
 
-            <fieldset className="category-filter">
-              <legend>Categorias</legend>
-              <label>
-                <input
-                  type="radio"
-                  name="category"
-                  value=""
-                  checked={category === ""}
-                  onChange={() => setCategory("")}
-                />
-                Todas
-              </label>
-              {categoriesQuery.data?.map((productCategory) => (
-                <label key={productCategory.slug}>
-                  <input
-                    type="radio"
-                    name="category"
-                    value={productCategory.slug}
-                    checked={category === productCategory.slug}
-                    onChange={(event) => setCategory(event.target.value)}
-                  />
-                  {productCategory.name}
-                </label>
-              ))}
-            </fieldset>
+            <section className="category-filter">
+              <button
+                className="category-filter-trigger"
+                type="button"
+                aria-controls="category-options"
+                aria-expanded={isCategoryFilterOpen}
+                onClick={() => setIsCategoryFilterOpen((isOpen) => !isOpen)}
+              >
+                <span>Categorias</span>
+                <span className="category-filter-count">
+                  {category ? "1 ativa" : "Todas"}
+                </span>
+              </button>
+
+              <div
+                className="category-filter-content"
+                data-open={isCategoryFilterOpen}
+                id="category-options"
+              >
+                <div className="category-filter-list">
+                  <label className="category-option">
+                    <input
+                      type="radio"
+                      name="category"
+                      value=""
+                      checked={category === ""}
+                      onChange={() => setCategory("")}
+                    />
+                    <span>Todas</span>
+                  </label>
+                  {categoriesQuery.data?.map((productCategory) => (
+                    <label className="category-option" key={productCategory.slug}>
+                      <input
+                        type="radio"
+                        name="category"
+                        value={productCategory.slug}
+                        checked={category === productCategory.slug}
+                        onChange={(event) => setCategory(event.target.value)}
+                      />
+                      <span>{productCategory.name}</span>
+                    </label>
+                  ))}
+                </div>
+              </div>
+            </section>
 
             <div className="price-filter">
               <span>Faixa de preco</span>
