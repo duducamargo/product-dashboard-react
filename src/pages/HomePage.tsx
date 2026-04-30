@@ -1,29 +1,16 @@
 import { useEffect, useMemo, useState } from "react";
-import { Link } from "react-router-dom";
+import { HomeHero } from "@/components/home/HomeHero";
+import { ProductFilters } from "@/components/home/ProductFilters";
+import { ProductsGrid } from "@/components/home/ProductsGrid";
+import { ProductsPagination } from "@/components/home/ProductsPagination";
+import { ProductsSkeletonGrid } from "@/components/home/ProductsSkeletonGrid";
+import { ProductsState } from "@/components/home/ProductsState";
+import { ProductsSummary } from "@/components/home/ProductsSummary";
+import { StoreHeader } from "@/components/home/StoreHeader";
+import { AppFooter } from "@/components/layout/AppFooter";
 import { useAuth } from "@/hooks/useAuth";
 import { PRODUCTS_PAGE_SIZE, useProductCategories, useProducts } from "@/hooks/useProducts";
 import "@/pages/HomePage.css";
-
-const currencyFormatter = new Intl.NumberFormat("pt-BR", {
-  currency: "USD",
-  style: "currency",
-});
-
-function getPaginationItems(currentPage: number, totalPages: number) {
-  if (totalPages <= 5) {
-    return Array.from({ length: totalPages }, (_, index) => index + 1);
-  }
-
-  if (currentPage <= 3) {
-    return [1, 2, 3, "ellipsis", totalPages] as const;
-  }
-
-  if (currentPage >= totalPages - 2) {
-    return [1, "ellipsis", totalPages - 2, totalPages - 1, totalPages] as const;
-  }
-
-  return [1, "ellipsis-start", currentPage, "ellipsis-end", totalPages] as const;
-}
 
 function toOptionalNumber(value: string) {
   if (!value) {
@@ -63,7 +50,9 @@ export function HomePage() {
   const lastItem = Math.min(page * PRODUCTS_PAGE_SIZE, totalProducts);
   const hasActiveFilters = Boolean(search || category || minPrice || maxPrice);
   const isInitialLoading = productsQuery.isLoading || categoriesQuery.isLoading;
-  const isUpdating = productsQuery.isFetching && !productsQuery.isLoading;
+  const isUpdating =
+    (productsQuery.isFetching && !productsQuery.isLoading) || productsQuery.isSearching;
+  const hasRequestError = productsQuery.isError || categoriesQuery.isError;
 
   useEffect(() => {
     setPage(1);
@@ -83,236 +72,66 @@ export function HomePage() {
 
   return (
     <div className="store-page">
-      <header className="store-header">
-        <Link className="store-brand" to="/home" aria-label="TechStore home">
-          TechStore
-        </Link>
-
-        <button className="header-action" type="button" onClick={signOut}>
-          Sair
-        </button>
-      </header>
+      <StoreHeader onSignOut={signOut} />
 
       <main className="home-page">
-        <section className="home-hero">
-          <p className="eyebrow">Loja de produtos</p>
-          <h1>Descubra o Futuro</h1>
-          <p>Produtos selecionados com filtros rapidos, paginacao e cache eficiente.</p>
-        </section>
+        <HomeHero />
 
         <div className="catalog-layout">
-          <aside className="filters-panel" aria-label="Filtros de produtos">
-            <label className="field">
-              <span>Buscar</span>
-              <input
-                type="search"
-                placeholder="Nome do produto"
-                value={search}
-                onChange={(event) => setSearch(event.target.value)}
-              />
-            </label>
-
-            <section className="category-filter">
-              <button
-                className="category-filter-trigger"
-                type="button"
-                aria-controls="category-options"
-                aria-expanded={isCategoryFilterOpen}
-                onClick={() => setIsCategoryFilterOpen((isOpen) => !isOpen)}
-              >
-                <span>Categorias</span>
-                <span className="category-filter-count">
-                  {category ? "1 ativa" : "Todas"}
-                </span>
-              </button>
-
-              {isCategoryFilterOpen ? (
-                <div className="category-filter-content" id="category-options">
-                  <div className="category-filter-list">
-                    <label className="category-option">
-                      <input
-                        type="radio"
-                        name="category"
-                        value=""
-                        checked={category === ""}
-                        onChange={() => setCategory("")}
-                      />
-                      <span>Todas</span>
-                    </label>
-                    {categoriesQuery.data?.map((productCategory) => (
-                      <label className="category-option" key={productCategory.slug}>
-                        <input
-                          type="radio"
-                          name="category"
-                          value={productCategory.slug}
-                          checked={category === productCategory.slug}
-                          onChange={(event) => setCategory(event.target.value)}
-                        />
-                        <span>{productCategory.name}</span>
-                      </label>
-                    ))}
-                  </div>
-                </div>
-              ) : null}
-            </section>
-
-            <div className="price-filter">
-              <span>Faixa de preco</span>
-              <label>
-                <input
-                  min="0"
-                  type="number"
-                  placeholder="Minimo"
-                  value={minPrice}
-                  onChange={(event) => setMinPrice(event.target.value)}
-                />
-              </label>
-              <label>
-                <input
-                  min="0"
-                  type="number"
-                  placeholder="Maximo"
-                  value={maxPrice}
-                  onChange={(event) => setMaxPrice(event.target.value)}
-                />
-              </label>
-            </div>
-
-            <button
-              className="button-primary filters-clear"
-              type="button"
-              onClick={handleClearFilters}
-              disabled={!hasActiveFilters}
-            >
-              Limpar filtros
-            </button>
-          </aside>
+          <ProductFilters
+            categories={categoriesQuery.data ?? []}
+            category={category}
+            hasActiveFilters={hasActiveFilters}
+            isCategoryFilterOpen={isCategoryFilterOpen}
+            maxPrice={maxPrice}
+            minPrice={minPrice}
+            search={search}
+            onCategoryChange={setCategory}
+            onClearFilters={handleClearFilters}
+            onMaxPriceChange={setMaxPrice}
+            onMinPriceChange={setMinPrice}
+            onSearchChange={setSearch}
+            onToggleCategoryFilter={() => setIsCategoryFilterOpen((isOpen) => !isOpen)}
+          />
 
           <section className="catalog-content">
-            {productsQuery.isError || categoriesQuery.isError ? (
-              <section className="state-card" role="alert">
-                <h2>Nao foi possivel carregar os produtos</h2>
-                <p>Verifique sua conexao e tente novamente.</p>
-                <button className="button-primary" type="button" onClick={handleRetry}>
-                  Tentar novamente
-                </button>
-              </section>
+            {hasRequestError ? (
+              <ProductsState
+                actionLabel="Tentar novamente"
+                description="Verifique sua conexao e tente novamente."
+                title="Nao foi possivel carregar os produtos"
+                role="alert"
+                onAction={handleRetry}
+              />
             ) : null}
 
-            {!productsQuery.isError && !categoriesQuery.isError ? (
+            {!hasRequestError ? (
               <>
-                <section className="products-summary" aria-live="polite">
-                  <div>
-                    <strong>{totalProducts}</strong>
-                    <span>
-                      {totalProducts === 1 ? " produto encontrado" : " produtos encontrados"}
-                    </span>
-                  </div>
-                  {totalProducts > 0 ? (
-                    <span>
-                      Exibindo {firstItem}-{lastItem}
-                    </span>
-                  ) : null}
-                </section>
+                <ProductsSummary
+                  firstItem={firstItem}
+                  lastItem={lastItem}
+                  totalProducts={totalProducts}
+                />
 
-                {isInitialLoading ? (
-                  <section className="products-grid" aria-label="Carregando produtos">
-                    {Array.from({ length: 6 }).map((_, index) => (
-                      <article className="product-card product-card-skeleton" key={index}>
-                        <div />
-                        <span />
-                        <span />
-                        <span />
-                      </article>
-                    ))}
-                  </section>
-                ) : null}
+                {isInitialLoading ? <ProductsSkeletonGrid /> : null}
 
                 {!isInitialLoading && products.length === 0 ? (
-                  <section className="state-card">
-                    <h2>Nenhum produto encontrado</h2>
-                    <p>Ajuste os filtros para ampliar os resultados.</p>
-                    {hasActiveFilters ? (
-                      <button className="button-primary" type="button" onClick={handleClearFilters}>
-                        Limpar filtros
-                      </button>
-                    ) : null}
-                  </section>
+                  <ProductsState
+                    actionLabel={hasActiveFilters ? "Limpar filtros" : undefined}
+                    description="Ajuste os filtros para ampliar os resultados."
+                    title="Nenhum produto encontrado"
+                    onAction={hasActiveFilters ? handleClearFilters : undefined}
+                  />
                 ) : null}
 
                 {!isInitialLoading && products.length > 0 ? (
                   <>
-                    <section
-                      className="products-grid"
-                      aria-busy={isUpdating || productsQuery.isSearching}
-                    >
-                      {products.map((product) => (
-                        <article className="product-card" key={product.id}>
-                          <div className="product-image-wrap">
-                            <img src={product.thumbnail} alt={product.title} loading="lazy" />
-                          </div>
-                          <div className="product-card-content">
-                            <div className="product-kicker">
-                              <span>{product.category}</span>
-                              <strong aria-label={`Avaliacao ${product.rating.toFixed(1)}`}>
-                                <span aria-hidden="true">★</span>
-                                {product.rating.toFixed(1)}
-                              </strong>
-                            </div>
-                            <h2>{product.title}</h2>
-                            <strong className="product-price">
-                              {currencyFormatter.format(product.price)}
-                            </strong>
-                            <Link className="details-button" to={`/products/${product.id}`}>
-                              Ver Detalhes
-                            </Link>
-                          </div>
-                        </article>
-                      ))}
-                    </section>
-
-                    <nav className="pagination" aria-label="Paginacao de produtos">
-                      <button
-                        className="pagination-button pagination-arrow"
-                        type="button"
-                        onClick={() => setPage((currentPage) => Math.max(currentPage - 1, 1))}
-                        disabled={page === 1}
-                        aria-label="Pagina anterior"
-                      >
-                        ‹
-                      </button>
-                      {getPaginationItems(page, productsQuery.totalPages).map((paginationItem) =>
-                        typeof paginationItem === "number" ? (
-                          <button
-                            className="pagination-button"
-                            data-active={paginationItem === page}
-                            key={paginationItem}
-                            type="button"
-                            onClick={() => setPage(paginationItem)}
-                            aria-current={paginationItem === page ? "page" : undefined}
-                          >
-                            {paginationItem}
-                          </button>
-                        ) : (
-                          <span className="pagination-ellipsis" key={paginationItem}>
-                            ...
-                          </span>
-                        )
-                      )}
-                      <button
-                        className="pagination-button pagination-arrow"
-                        type="button"
-                        onClick={() =>
-                          setPage((currentPage) =>
-                            Math.min(currentPage + 1, productsQuery.totalPages)
-                          )
-                        }
-                        disabled={page === productsQuery.totalPages}
-                        aria-label="Proxima pagina"
-                      >
-                        ›
-                      </button>
-                    </nav>
+                    <ProductsGrid isUpdating={isUpdating} products={products} />
+                    <ProductsPagination
+                      currentPage={page}
+                      totalPages={productsQuery.totalPages}
+                      onPageChange={setPage}
+                    />
                   </>
                 ) : null}
               </>
@@ -320,6 +139,8 @@ export function HomePage() {
           </section>
         </div>
       </main>
+
+      <AppFooter />
     </div>
   );
 }
