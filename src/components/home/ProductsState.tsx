@@ -19,7 +19,11 @@ export function ProductsState({
     return (
       <section className="state-card state-card-empty" role={role}>
         <div className="empty-state-illustration" aria-hidden="true">
-          <span />
+          <span className="empty-box">
+            <span className="empty-box-lid" />
+            <span className="empty-box-body" />
+            <span className="empty-box-label" />
+          </span>
         </div>
         <h2>{title}</h2>
         <p>{description}</p>

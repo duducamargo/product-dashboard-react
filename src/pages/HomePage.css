@@ -866,31 +866,64 @@
   width: 18px;
 }
 
-.empty-state-illustration span {
-  border: 6px solid var(--primary);
-  border-radius: 5px;
-  height: 58px;
+.empty-box {
+  display: block;
+  height: 92px;
   position: relative;
-  width: 62px;
+  width: 96px;
 }
 
-.empty-state-illustration span::before,
-.empty-state-illustration span::after {
+.empty-box-lid {
+  background: var(--primary);
+  border-radius: 4px 4px 0 0;
+  height: 20px;
+  left: 26px;
+  position: absolute;
+  top: 0;
+  width: 44px;
+}
+
+.empty-box-body {
+  background: #ffffff;
+  border: 6px solid var(--primary);
+  border-radius: 8px;
+  bottom: 0;
+  height: 70px;
+  left: 0;
+  position: absolute;
+  width: 96px;
+}
+
+.empty-box-body::before,
+.empty-box-body::after {
   background: var(--primary);
   content: "";
-  left: 9px;
   position: absolute;
-  right: 9px;
 }
 
-.empty-state-illustration span::before {
+.empty-box-body::before {
   height: 6px;
-  top: 14px;
+  left: 17px;
+  right: 17px;
+  top: 24px;
 }
 
-.empty-state-illustration span::after {
+.empty-box-body::after {
+  height: 6px;
+  left: -6px;
+  right: -6px;
+  top: -6px;
+}
+
+.empty-box-label {
+  background: #edeaff;
+  border: 3px solid var(--primary);
+  border-radius: 4px;
+  bottom: 15px;
   height: 16px;
-  top: -18px;
+  left: 29px;
+  position: absolute;
+  width: 38px;
 }
 
 .pagination {
