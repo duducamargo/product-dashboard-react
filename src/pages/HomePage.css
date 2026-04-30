@@ -18,10 +18,19 @@
 }
 
 .store-brand {
+  align-items: center;
   color: var(--primary);
+  display: inline-flex;
   font-size: 1.08rem;
   font-weight: 900;
+  gap: 9px;
   text-decoration: none;
+}
+
+.store-brand-icon {
+  height: 24px;
+  object-fit: contain;
+  width: 24px;
 }
 
 .store-nav {
