@@ -9,6 +9,22 @@ const currencyFormatter = new Intl.NumberFormat("pt-BR", {
   style: "currency",
 });
 
+function getPaginationItems(currentPage: number, totalPages: number) {
+  if (totalPages <= 5) {
+    return Array.from({ length: totalPages }, (_, index) => index + 1);
+  }
+
+  if (currentPage <= 3) {
+    return [1, 2, 3, "ellipsis", totalPages] as const;
+  }
+
+  if (currentPage >= totalPages - 2) {
+    return [1, "ellipsis", totalPages - 2, totalPages - 1, totalPages] as const;
+  }
+
+  return [1, "ellipsis-start", currentPage, "ellipsis-end", totalPages] as const;
+}
+
 function toOptionalNumber(value: string) {
   if (!value) {
     return undefined;
@@ -257,18 +273,34 @@ export function HomePage() {
 
                     <nav className="pagination" aria-label="Paginacao de produtos">
                       <button
-                        className="button-secondary"
+                        className="pagination-button pagination-arrow"
                         type="button"
                         onClick={() => setPage((currentPage) => Math.max(currentPage - 1, 1))}
                         disabled={page === 1}
+                        aria-label="Pagina anterior"
                       >
-                        Anterior
+                        ‹
                       </button>
-                      <span>
-                        Pagina {page} de {productsQuery.totalPages}
-                      </span>
+                      {getPaginationItems(page, productsQuery.totalPages).map((paginationItem) =>
+                        typeof paginationItem === "number" ? (
+                          <button
+                            className="pagination-button"
+                            data-active={paginationItem === page}
+                            key={paginationItem}
+                            type="button"
+                            onClick={() => setPage(paginationItem)}
+                            aria-current={paginationItem === page ? "page" : undefined}
+                          >
+                            {paginationItem}
+                          </button>
+                        ) : (
+                          <span className="pagination-ellipsis" key={paginationItem}>
+                            ...
+                          </span>
+                        )
+                      )}
                       <button
-                        className="button-secondary"
+                        className="pagination-button pagination-arrow"
                         type="button"
                         onClick={() =>
                           setPage((currentPage) =>
@@ -276,8 +308,9 @@ export function HomePage() {
                           )
                         }
                         disabled={page === productsQuery.totalPages}
+                        aria-label="Proxima pagina"
                       >
-                        Proxima
+                        ›
                       </button>
                     </nav>
                   </>
