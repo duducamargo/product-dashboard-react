@@ -52,8 +52,34 @@ function LogoutIcon() {
   );
 }
 
+function UserIcon() {
+  return (
+    <svg aria-hidden="true" viewBox="0 0 24 24" focusable="false">
+      <path
+        d="M20 21a8 8 0 0 0-16 0"
+        fill="none"
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="2"
+      />
+      <circle
+        cx="12"
+        cy="8"
+        fill="none"
+        r="4"
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="2"
+      />
+    </svg>
+  );
+}
+
 export function StoreHeader({ onSignOut, search }: StoreHeaderProps) {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const hasSearchValue = Boolean(search?.value.trim());
   const shouldShowSuggestions = Boolean(search && hasSearchValue && isSearchOpen);
 
@@ -136,9 +162,40 @@ export function StoreHeader({ onSignOut, search }: StoreHeaderProps) {
         </div>
       ) : null}
 
-      <button className="header-action" type="button" onClick={onSignOut} aria-label="Sair">
-        <LogoutIcon />
-      </button>
+      <div
+        className="header-user-menu"
+        onBlur={() => window.setTimeout(() => setIsUserMenuOpen(false), 120)}
+      >
+        <button
+          className="header-avatar-button"
+          type="button"
+          aria-label="Abrir menu do usuario"
+          aria-haspopup="menu"
+          aria-expanded={isUserMenuOpen}
+          onClick={() => setIsUserMenuOpen((isOpen) => !isOpen)}
+        >
+          <UserIcon />
+        </button>
+
+        {isUserMenuOpen ? (
+          <div className="header-user-popover" role="menu">
+            <div className="header-user-summary">
+              <span className="header-user-avatar" aria-hidden="true">
+                <UserIcon />
+              </span>
+              <span>
+                <strong>Usuario</strong>
+                <small>Sessao ativa</small>
+              </span>
+            </div>
+
+            <button className="header-user-action" type="button" role="menuitem" onClick={onSignOut}>
+              <LogoutIcon />
+              <span>Sair</span>
+            </button>
+          </div>
+        ) : null}
+      </div>
     </header>
   );
 }
