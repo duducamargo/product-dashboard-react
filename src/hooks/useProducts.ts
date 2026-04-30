@@ -87,3 +87,27 @@ export function useProductCategories() {
     staleTime: 1000 * 60 * 30,
   });
 }
+
+export function useProductSuggestions(search: string) {
+  const debouncedSearch = useDebounce(search.trim(), 250);
+
+  const query = useQuery({
+    queryKey: ["product-suggestions", debouncedSearch],
+    queryFn: async () => {
+      const response = await productService.getProducts({
+        limit: 6,
+        search: debouncedSearch,
+        skip: 0,
+      });
+
+      return response.products;
+    },
+    enabled: debouncedSearch.length >= 2,
+    staleTime: 1000 * 60 * 5,
+  });
+
+  return {
+    ...query,
+    isSearching: search.trim() !== debouncedSearch,
+  };
+}

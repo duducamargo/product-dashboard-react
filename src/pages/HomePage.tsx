@@ -9,7 +9,12 @@ import { ProductsSummary } from "@/components/home/ProductsSummary";
 import { AppFooter } from "@/components/layout/AppFooter";
 import { StoreHeader } from "@/components/layout/StoreHeader";
 import { useAuth } from "@/hooks/useAuth";
-import { PRODUCTS_PAGE_SIZE, useProductCategories, useProducts } from "@/hooks/useProducts";
+import {
+  PRODUCTS_PAGE_SIZE,
+  useProductCategories,
+  useProducts,
+  useProductSuggestions,
+} from "@/hooks/useProducts";
 import "@/pages/HomePage.css";
 
 function toOptionalNumber(value: string) {
@@ -43,6 +48,7 @@ export function HomePage() {
   );
 
   const productsQuery = useProducts(filters);
+  const suggestionsQuery = useProductSuggestions(search);
   const categoriesQuery = useProductCategories();
   const products = productsQuery.data?.products ?? [];
   const totalProducts = productsQuery.data?.total ?? 0;
@@ -72,7 +78,16 @@ export function HomePage() {
 
   return (
     <div className="store-page">
-      <StoreHeader onSignOut={signOut} />
+      <StoreHeader
+        onSignOut={signOut}
+        search={{
+          isLoading: suggestionsQuery.isLoading || suggestionsQuery.isSearching,
+          value: search,
+          suggestions: suggestionsQuery.data ?? [],
+          onChange: setSearch,
+          onSelect: (product) => setSearch(product.title),
+        }}
+      />
 
       <main className="home-page">
         <HomeHero />
@@ -85,12 +100,10 @@ export function HomePage() {
             isCategoryFilterOpen={isCategoryFilterOpen}
             maxPrice={maxPrice}
             minPrice={minPrice}
-            search={search}
             onCategoryChange={setCategory}
             onClearFilters={handleClearFilters}
             onMaxPriceChange={setMaxPrice}
             onMinPriceChange={setMinPrice}
-            onSearchChange={setSearch}
             onToggleCategoryFilter={() => setIsCategoryFilterOpen((isOpen) => !isOpen)}
           />
 

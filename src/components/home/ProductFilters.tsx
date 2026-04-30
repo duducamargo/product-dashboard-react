@@ -7,12 +7,10 @@ type ProductFiltersProps = {
   isCategoryFilterOpen: boolean;
   maxPrice: string;
   minPrice: string;
-  search: string;
   onCategoryChange: (category: string) => void;
   onClearFilters: () => void;
   onMaxPriceChange: (maxPrice: string) => void;
   onMinPriceChange: (minPrice: string) => void;
-  onSearchChange: (search: string) => void;
   onToggleCategoryFilter: () => void;
 };
 
@@ -23,26 +21,14 @@ export function ProductFilters({
   isCategoryFilterOpen,
   maxPrice,
   minPrice,
-  search,
   onCategoryChange,
   onClearFilters,
   onMaxPriceChange,
   onMinPriceChange,
-  onSearchChange,
   onToggleCategoryFilter,
 }: ProductFiltersProps) {
   return (
     <aside className="filters-panel" aria-label="Filtros de produtos">
-      <label className="field">
-        <span>Buscar</span>
-        <input
-          type="search"
-          placeholder="Nome do produto"
-          value={search}
-          onChange={(event) => onSearchChange(event.target.value)}
-        />
-      </label>
-
       <section className="category-filter">
         <button
           className="category-filter-trigger"
