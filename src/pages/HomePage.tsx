@@ -71,11 +71,6 @@ export function HomePage() {
           TechStore
         </Link>
 
-        <nav className="store-nav" aria-label="Navegacao principal">
-          <Link to="/home">Home</Link>
-          <Link to="/home">Produtos</Link>
-        </nav>
-
         <button className="header-action" type="button" onClick={signOut}>
           Sair
         </button>
@@ -84,7 +79,7 @@ export function HomePage() {
       <main className="home-page">
         <section className="home-hero">
           <p className="eyebrow">Loja de produtos</p>
-          <h1>Discover the Future</h1>
+          <h1>Descubra o Futuro</h1>
           <p>Produtos selecionados com filtros rapidos, paginacao e cache eficiente.</p>
         </section>
 
@@ -156,12 +151,6 @@ export function HomePage() {
             >
               Limpar filtros
             </button>
-
-            <div className="promo-card" aria-hidden="true">
-              <span>New season</span>
-              <strong>Upgrade Your Workspace</strong>
-              <small>Produtos para sua rotina</small>
-            </div>
           </aside>
 
           <section className="catalog-content">
@@ -225,19 +214,31 @@ export function HomePage() {
                       {products.map((product) => (
                         <article className="product-card" key={product.id}>
                           <div className="product-image-wrap">
+                            <span className="stock-badge">In stock</span>
+                            <button
+                              className="favorite-button"
+                              type="button"
+                              aria-label={`Adicionar ${product.title} aos favoritos`}
+                            >
+                              ♡
+                            </button>
                             <img src={product.thumbnail} alt={product.title} loading="lazy" />
                           </div>
                           <div className="product-card-content">
                             <div className="product-kicker">
                               <span>{product.category}</span>
-                              <strong>{product.rating.toFixed(1)}</strong>
+                              <strong aria-label={`Avaliacao ${product.rating.toFixed(1)}`}>
+                                <span aria-hidden="true">★</span>
+                                {product.rating.toFixed(1)}
+                              </strong>
                             </div>
                             <h2>{product.title}</h2>
-                            <p>{product.description}</p>
-                            <div className="product-meta">
-                              <strong>{currencyFormatter.format(product.price)}</strong>
-                              <span>Estoque {product.stock}</span>
-                            </div>
+                            <strong className="product-price">
+                              {currencyFormatter.format(product.price)}
+                            </strong>
+                            <Link className="details-button" to={`/products/${product.id}`}>
+                              View Details
+                            </Link>
                           </div>
                         </article>
                       ))}
