@@ -764,7 +764,44 @@
   border-radius: 8px;
   display: flex;
   flex-direction: column;
+  min-height: 240px;
   padding: 34px;
+}
+
+.state-card-icon {
+  align-items: center;
+  background: #f0edff;
+  border-radius: 999px;
+  color: var(--primary);
+  display: inline-flex;
+  height: 44px;
+  justify-content: center;
+  margin-bottom: 18px;
+  width: 44px;
+}
+
+.state-card-icon::before {
+  content: "";
+  border: 2px solid currentColor;
+  border-radius: 50%;
+  height: 18px;
+  width: 18px;
+}
+
+.state-card[data-variant="error"] {
+  border-color: rgb(199 63 84 / 24%);
+}
+
+.state-card[data-variant="error"] .state-card-icon {
+  background: rgb(199 63 84 / 10%);
+  color: var(--danger);
+}
+
+.state-card[data-variant="error"] .state-card-icon::before {
+  border-radius: 4px;
+  height: 4px;
+  transform: rotate(45deg);
+  width: 18px;
 }
 
 .state-card p {

@@ -3,6 +3,7 @@ type ProductsStateProps = {
   description: string;
   title: string;
   role?: "alert";
+  variant?: "empty" | "error";
   onAction?: () => void;
 };
 
@@ -11,10 +12,12 @@ export function ProductsState({
   description,
   title,
   role,
+  variant = "empty",
   onAction,
 }: ProductsStateProps) {
   return (
-    <section className="state-card" role={role}>
+    <section className="state-card" data-variant={variant} role={role}>
+      <span className="state-card-icon" aria-hidden="true" />
       <h2>{title}</h2>
       <p>{description}</p>
       {actionLabel && onAction ? (

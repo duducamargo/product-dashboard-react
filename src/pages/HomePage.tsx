@@ -125,17 +125,20 @@ export function HomePage() {
                 description="Verifique sua conexao e tente novamente."
                 title="Nao foi possivel carregar os produtos"
                 role="alert"
+                variant="error"
                 onAction={handleRetry}
               />
             ) : null}
 
             {!hasRequestError ? (
               <>
-                <ProductsSummary
-                  firstItem={firstItem}
-                  lastItem={lastItem}
-                  totalProducts={totalProducts}
-                />
+                {!isInitialLoading ? (
+                  <ProductsSummary
+                    firstItem={firstItem}
+                    lastItem={lastItem}
+                    totalProducts={totalProducts}
+                  />
+                ) : null}
 
                 {isInitialLoading ? <ProductsSkeletonGrid /> : null}
 
