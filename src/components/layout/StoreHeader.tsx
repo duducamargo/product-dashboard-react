@@ -14,6 +14,44 @@ type StoreHeaderProps = {
   };
 };
 
+function SearchIcon() {
+  return (
+    <svg aria-hidden="true" viewBox="0 0 24 24" focusable="false">
+      <path
+        d="m21 21-4.35-4.35m1.35-5.65a7 7 0 1 1-14 0 7 7 0 0 1 14 0Z"
+        fill="none"
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="2"
+      />
+    </svg>
+  );
+}
+
+function LogoutIcon() {
+  return (
+    <svg aria-hidden="true" viewBox="0 0 24 24" focusable="false">
+      <path
+        d="M10 17v1a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-6a2 2 0 0 0-2 2v1"
+        fill="none"
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="2"
+      />
+      <path
+        d="M15 12H3m0 0 4-4m-4 4 4 4"
+        fill="none"
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="2"
+      />
+    </svg>
+  );
+}
+
 export function StoreHeader({ onSignOut, search }: StoreHeaderProps) {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const hasSearchValue = Boolean(search?.value.trim());
@@ -32,9 +70,15 @@ export function StoreHeader({ onSignOut, search }: StoreHeaderProps) {
       </Link>
 
       {search ? (
-        <div className="header-search" onBlur={() => window.setTimeout(() => setIsSearchOpen(false), 120)}>
+        <div
+          className="header-search"
+          onBlur={() => window.setTimeout(() => setIsSearchOpen(false), 120)}
+        >
           <label className="header-search-field">
             <span className="sr-only">Buscar produtos</span>
+            <span className="header-search-icon">
+              <SearchIcon />
+            </span>
             <input
               type="search"
               placeholder="Buscar produtos..."
@@ -92,8 +136,8 @@ export function StoreHeader({ onSignOut, search }: StoreHeaderProps) {
         </div>
       ) : null}
 
-      <button className="header-action" type="button" onClick={onSignOut}>
-        Sair
+      <button className="header-action" type="button" onClick={onSignOut} aria-label="Sair">
+        <LogoutIcon />
       </button>
     </header>
   );
