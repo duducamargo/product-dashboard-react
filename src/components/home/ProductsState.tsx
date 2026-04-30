@@ -15,6 +15,23 @@ export function ProductsState({
   variant = "empty",
   onAction,
 }: ProductsStateProps) {
+  if (variant === "empty") {
+    return (
+      <section className="state-card state-card-empty" role={role}>
+        <div className="empty-state-illustration" aria-hidden="true">
+          <span />
+        </div>
+        <h2>{title}</h2>
+        <p>{description}</p>
+        {actionLabel && onAction ? (
+          <button className="button-primary" type="button" onClick={onAction}>
+            {actionLabel}
+          </button>
+        ) : null}
+      </section>
+    );
+  }
+
   return (
     <section className="state-card" data-variant={variant} role={role}>
       <span className="state-card-icon" aria-hidden="true" />

@@ -144,10 +144,10 @@ export function HomePage() {
 
                 {!isInitialLoading && products.length === 0 ? (
                   <ProductsState
-                    actionLabel={hasActiveFilters ? "Limpar filtros" : undefined}
-                    description="Ajuste os filtros para ampliar os resultados."
+                    actionLabel="Limpar filtros"
+                    description="Buscamos em todo o catalogo, mas nenhum produto corresponde aos filtros atuais."
                     title="Nenhum produto encontrado"
-                    onAction={hasActiveFilters ? handleClearFilters : undefined}
+                    onAction={handleClearFilters}
                   />
                 ) : null}
 

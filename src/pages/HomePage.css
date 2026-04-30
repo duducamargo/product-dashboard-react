@@ -808,6 +808,91 @@
   margin-bottom: 18px;
 }
 
+.state-card-empty {
+  align-items: center;
+  background: transparent;
+  border: 0;
+  min-height: 520px;
+  padding: 56px 24px;
+  text-align: center;
+}
+
+.state-card-empty h2 {
+  color: #182034;
+  font-size: 2.35rem;
+  font-weight: 900;
+  letter-spacing: 0;
+  line-height: 1.1;
+  margin-bottom: 14px;
+}
+
+.state-card-empty p {
+  color: #667085;
+  font-size: 1.05rem;
+  font-weight: 700;
+  line-height: 1.55;
+  margin-bottom: 34px;
+  max-width: 520px;
+}
+
+.empty-state-illustration {
+  align-items: center;
+  background: #ffffff;
+  border: 1px solid #d9ddeb;
+  border-radius: 8px;
+  box-shadow: 0 24px 70px rgb(31 41 55 / 8%);
+  display: inline-flex;
+  height: 170px;
+  justify-content: center;
+  margin-bottom: 42px;
+  position: relative;
+  width: 150px;
+}
+
+.empty-state-illustration::after {
+  align-items: center;
+  border: 2px solid var(--danger);
+  border-radius: 999px;
+  color: var(--danger);
+  content: "!";
+  display: inline-flex;
+  font-size: 0.75rem;
+  font-weight: 900;
+  height: 18px;
+  justify-content: center;
+  position: absolute;
+  right: 16px;
+  top: 16px;
+  width: 18px;
+}
+
+.empty-state-illustration span {
+  border: 6px solid var(--primary);
+  border-radius: 5px;
+  height: 58px;
+  position: relative;
+  width: 62px;
+}
+
+.empty-state-illustration span::before,
+.empty-state-illustration span::after {
+  background: var(--primary);
+  content: "";
+  left: 9px;
+  position: absolute;
+  right: 9px;
+}
+
+.empty-state-illustration span::before {
+  height: 6px;
+  top: 14px;
+}
+
+.empty-state-illustration span::after {
+  height: 16px;
+  top: -18px;
+}
+
 .pagination {
   align-items: center;
   display: flex;
@@ -1010,6 +1095,21 @@
   .products-summary {
     align-items: stretch;
     flex-direction: column;
+  }
+
+  .state-card-empty {
+    min-height: 420px;
+    padding: 42px 12px;
+  }
+
+  .state-card-empty h2 {
+    font-size: 1.85rem;
+  }
+
+  .empty-state-illustration {
+    height: 148px;
+    margin-bottom: 32px;
+    width: 132px;
   }
 
   .pagination {
