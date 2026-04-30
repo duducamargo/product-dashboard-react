@@ -110,36 +110,34 @@ export function HomePage() {
                 </span>
               </button>
 
-              <div
-                className="category-filter-content"
-                data-open={isCategoryFilterOpen}
-                id="category-options"
-              >
-                <div className="category-filter-list">
-                  <label className="category-option">
-                    <input
-                      type="radio"
-                      name="category"
-                      value=""
-                      checked={category === ""}
-                      onChange={() => setCategory("")}
-                    />
-                    <span>Todas</span>
-                  </label>
-                  {categoriesQuery.data?.map((productCategory) => (
-                    <label className="category-option" key={productCategory.slug}>
+              {isCategoryFilterOpen ? (
+                <div className="category-filter-content" id="category-options">
+                  <div className="category-filter-list">
+                    <label className="category-option">
                       <input
                         type="radio"
                         name="category"
-                        value={productCategory.slug}
-                        checked={category === productCategory.slug}
-                        onChange={(event) => setCategory(event.target.value)}
+                        value=""
+                        checked={category === ""}
+                        onChange={() => setCategory("")}
                       />
-                      <span>{productCategory.name}</span>
+                      <span>Todas</span>
                     </label>
-                  ))}
+                    {categoriesQuery.data?.map((productCategory) => (
+                      <label className="category-option" key={productCategory.slug}>
+                        <input
+                          type="radio"
+                          name="category"
+                          value={productCategory.slug}
+                          checked={category === productCategory.slug}
+                          onChange={(event) => setCategory(event.target.value)}
+                        />
+                        <span>{productCategory.name}</span>
+                      </label>
+                    ))}
+                  </div>
                 </div>
-              </div>
+              ) : null}
             </section>
 
             <div className="price-filter">
