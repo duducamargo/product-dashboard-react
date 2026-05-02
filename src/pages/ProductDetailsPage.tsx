@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { AppFooter } from "@/components/layout/AppFooter";
 import { StoreHeader } from "@/components/layout/StoreHeader";
@@ -21,6 +21,16 @@ function isNotFoundError(error: unknown) {
   return (error as { response?: { status?: number } }).response?.status === 404;
 }
 
+function translateAvailabilityStatus(status?: string) {
+  const translations: Record<string, string> = {
+    "In Stock": "Em estoque",
+    "Low Stock": "Estoque baixo",
+    "Out of Stock": "Sem estoque",
+  };
+
+  return status ? (translations[status] ?? status) : "Em estoque";
+}
+
 export function ProductDetailsPage() {
   const { id } = useParams();
   const { signOut } = useAuth();
@@ -33,11 +43,16 @@ export function ProductDetailsPage() {
     [product]
   );
   const currentImage = selectedImage ?? productImages[0];
+  const reviewCount = product?.reviews?.length ?? 0;
   const hasNotFound = productId === null || isNotFoundError(productQuery.error);
   const originalPrice =
     product && product.discountPercentage > 0
       ? product.price / (1 - product.discountPercentage / 100)
       : null;
+
+  useEffect(() => {
+    setSelectedImage(null);
+  }, [product?.id]);
 
   if (productQuery.isLoading) {
     return (
@@ -124,7 +139,9 @@ export function ProductDetailsPage() {
           </div>
 
           <section className="details-info" aria-labelledby="product-title">
-            <span className="details-stock-badge">{product.availabilityStatus ?? "Em estoque"}</span>
+            <span className="details-stock-badge">
+              {translateAvailabilityStatus(product.availabilityStatus)}
+            </span>
             <h1 id="product-title">{product.title}</h1>
             <p className="details-model">
               SKU: {product.sku} | Marca: {product.brand ?? "Nao informada"}
@@ -133,6 +150,7 @@ export function ProductDetailsPage() {
             <div className="details-rating" aria-label={`Avaliacao ${product.rating.toFixed(1)}`}>
               <span>{"\u2605\u2605\u2605\u2605\u2605"}</span>
               <strong>{product.rating.toFixed(1)}</strong>
+              {reviewCount > 0 ? <small>({reviewCount} avaliacoes)</small> : null}
             </div>
 
             <div className="details-price-row">

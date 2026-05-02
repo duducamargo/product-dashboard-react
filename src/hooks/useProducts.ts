@@ -83,7 +83,13 @@ export function useProducts(filters: ProductFilters) {
 export function useProduct(productId: number | null) {
   return useQuery({
     queryKey: ["product", productId],
-    queryFn: () => productService.getProductById(productId as number),
+    queryFn: ({ signal }) => {
+      if (productId === null) {
+        throw new Error("Product id is required");
+      }
+
+      return productService.getProductById(productId, signal);
+    },
     enabled: productId !== null,
     retry: (failureCount, error) => {
       const status = (error as { response?: { status?: number } }).response?.status;

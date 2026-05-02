@@ -23,6 +23,21 @@ export type Product = {
   availabilityStatus?: string;
   returnPolicy?: string;
   minimumOrderQuantity?: number;
+  reviews?: ProductReview[];
+  meta?: {
+    createdAt: string;
+    updatedAt: string;
+    barcode: string;
+    qrCode: string;
+  };
+};
+
+export type ProductReview = {
+  rating: number;
+  comment: string;
+  date: string;
+  reviewerName: string;
+  reviewerEmail: string;
 };
 
 export type ProductsResponse = {

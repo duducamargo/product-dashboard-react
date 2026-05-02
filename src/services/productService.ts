@@ -29,9 +29,24 @@ function buildResponse(products: Product[], skip: number, limit: number): Produc
   };
 }
 
+function isProduct(data: unknown): data is Product {
+  return (
+    typeof data === "object" &&
+    data !== null &&
+    "id" in data &&
+    "title" in data &&
+    typeof (data as Product).id === "number" &&
+    typeof (data as Product).title === "string"
+  );
+}
+
 export const productService = {
-  async getProductById(productId: number) {
-    const { data } = await httpClient.get<Product>(`/products/${productId}`);
+  async getProductById(productId: number, signal?: AbortSignal) {
+    const { data } = await httpClient.get<unknown>(`/products/${productId}`, { signal });
+
+    if (!isProduct(data)) {
+      throw new Error("Invalid product response");
+    }
 
     return data;
   },

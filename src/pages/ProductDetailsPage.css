@@ -131,6 +131,12 @@
   letter-spacing: 0.12em;
 }
 
+.details-rating small {
+  color: #8a91a3;
+  font-size: 0.88rem;
+  font-weight: 800;
+}
+
 .details-price-row {
   align-items: baseline;
   display: flex;
