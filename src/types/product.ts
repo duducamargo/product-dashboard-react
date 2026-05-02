@@ -10,6 +10,19 @@ export type Product = {
   brand?: string;
   sku: string;
   thumbnail: string;
+  images: string[];
+  tags: string[];
+  weight: number;
+  dimensions: {
+    width: number;
+    height: number;
+    depth: number;
+  };
+  warrantyInformation?: string;
+  shippingInformation?: string;
+  availabilityStatus?: string;
+  returnPolicy?: string;
+  minimumOrderQuantity?: number;
 };
 
 export type ProductsResponse = {

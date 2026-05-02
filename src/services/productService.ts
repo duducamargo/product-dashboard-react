@@ -30,6 +30,12 @@ function buildResponse(products: Product[], skip: number, limit: number): Produc
 }
 
 export const productService = {
+  async getProductById(productId: number) {
+    const { data } = await httpClient.get<Product>(`/products/${productId}`);
+
+    return data;
+  },
+
   async getProducts({ search = "", category = "", limit, skip }: GetProductsParams) {
     const normalizedSearch = search.trim();
 
