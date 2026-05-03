@@ -1,6 +1,7 @@
-import { Navigate, Route, Routes } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import { HomePage } from "@/pages/HomePage";
 import { LoginPage } from "@/pages/LoginPage";
+import { NotFoundPage } from "@/pages/NotFoundPage";
 import { ProductDetailsPage } from "@/pages/ProductDetailsPage";
 import { ProtectedRoute } from "@/routes/ProtectedRoute";
 
@@ -12,9 +13,8 @@ export function AppRoutes() {
       <Route element={<ProtectedRoute />}>
         <Route path="/home" element={<HomePage />} />
         <Route path="/products/:id" element={<ProductDetailsPage />} />
+        <Route path="*" element={<NotFoundPage />} />
       </Route>
-
-      <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );
 }
