@@ -80,6 +80,25 @@ export function useProducts(filters: ProductFilters) {
   };
 }
 
+export function useProduct(productId: number | null) {
+  return useQuery({
+    queryKey: ["product", productId],
+    queryFn: ({ signal }) => {
+      if (productId === null) {
+        throw new Error("Product id is required");
+      }
+
+      return productService.getProductById(productId, signal);
+    },
+    enabled: productId !== null,
+    retry: (failureCount, error) => {
+      const status = (error as { response?: { status?: number } }).response?.status;
+
+      return status !== 404 && failureCount < 1;
+    },
+  });
+}
+
 export function useProductCategories() {
   return useQuery({
     queryKey: ["product-categories"],
