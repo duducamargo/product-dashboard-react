@@ -185,6 +185,7 @@ src/
 |-- assets/              # Assets estaticos, como o icone da marca
 |-- components/          # Componentes reutilizaveis por dominio visual
 |   |-- auth/            # Componentes da autenticacao
+|   |-- feedback/        # Estados visuais reutilizaveis, como Not Found
 |   |-- home/            # Componentes especificos da Home
 |   |-- layout/          # Layout compartilhado, header, footer e layout da loja
 |   |-- product/         # Componentes reutilizaveis de produto
