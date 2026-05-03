@@ -1,9 +1,9 @@
 import { Component, type ReactNode, useEffect, useMemo, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { AppFooter } from "@/components/layout/AppFooter";
 import { StoreHeader } from "@/components/layout/StoreHeader";
 import { useAuth } from "@/hooks/useAuth";
-import { useProduct } from "@/hooks/useProducts";
+import { useProduct, useProductSuggestions } from "@/hooks/useProducts";
 import "@/pages/HomePage.css";
 import "@/pages/ProductDetailsPage.css";
 
@@ -109,12 +109,25 @@ class DetailsErrorBoundary extends Component<{ children: ReactNode }, DetailsErr
 
 export function ProductDetailsPage() {
   const { id } = useParams();
+  const navigate = useNavigate();
   const { signOut } = useAuth();
   const productId = getProductId(id);
   const productQuery = useProduct(productId);
   const product = productQuery.data;
+  const [headerSearch, setHeaderSearch] = useState("");
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [hasCopiedProductLink, setHasCopiedProductLink] = useState(false);
+  const suggestionsQuery = useProductSuggestions(headerSearch);
+  const headerSearchConfig = {
+    isLoading: suggestionsQuery.isLoading || suggestionsQuery.isSearching,
+    value: headerSearch,
+    suggestions: suggestionsQuery.data ?? [],
+    onChange: setHeaderSearch,
+    onSelect: (selectedProduct: { id: number; title: string }) => {
+      setHeaderSearch(selectedProduct.title);
+      navigate(`/products/${selectedProduct.id}`);
+    },
+  };
   const productImages = useMemo(
     () => (product ? getGalleryImages(product.thumbnail, product.images ?? []) : []),
     [product]
@@ -163,7 +176,7 @@ export function ProductDetailsPage() {
   if (productId !== null && productQuery.isLoading) {
     return (
       <div className="store-page">
-        <StoreHeader onSignOut={signOut} />
+        <StoreHeader onSignOut={signOut} search={headerSearchConfig} />
         <main className="product-details-page">
           <section className="details-skeleton" aria-busy="true" aria-label="Carregando produto" />
         </main>
@@ -175,7 +188,7 @@ export function ProductDetailsPage() {
   if (hasNotFound) {
     return (
       <div className="store-page">
-        <StoreHeader onSignOut={signOut} />
+        <StoreHeader onSignOut={signOut} search={headerSearchConfig} />
         <main className="product-details-page">
           <section className="details-state">
             <h1>Produto nao encontrado</h1>
@@ -193,7 +206,7 @@ export function ProductDetailsPage() {
   if (productQuery.isError || !product) {
     return (
       <div className="store-page">
-        <StoreHeader onSignOut={signOut} />
+        <StoreHeader onSignOut={signOut} search={headerSearchConfig} />
         <main className="product-details-page">
           <section className="details-state">
             <h1>Nao foi possivel carregar o produto</h1>
@@ -210,7 +223,7 @@ export function ProductDetailsPage() {
 
   return (
     <div className="store-page">
-      <StoreHeader onSignOut={signOut} />
+      <StoreHeader onSignOut={signOut} search={headerSearchConfig} />
 
       <DetailsErrorBoundary>
         <main className="product-details-page">
