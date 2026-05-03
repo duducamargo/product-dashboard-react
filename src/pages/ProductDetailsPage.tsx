@@ -39,12 +39,14 @@ export function ProductDetailsPage() {
   const product = productQuery.data;
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const productImages = useMemo(
-    () => (product ? [product.thumbnail, ...(product.images ?? [])] : []),
+    () => (product ? Array.from(new Set([product.thumbnail, ...(product.images ?? [])])) : []),
     [product]
   );
   const currentImage = selectedImage ?? productImages[0];
   const reviewCount = product?.reviews?.length ?? 0;
   const hasNotFound = productId === null || isNotFoundError(productQuery.error);
+  const dimensions = product?.dimensions;
+  const productTags = product?.tags ?? [];
   const originalPrice =
     product && product.discountPercentage > 0
       ? product.price / (1 - product.discountPercentage / 100)
@@ -54,7 +56,7 @@ export function ProductDetailsPage() {
     setSelectedImage(null);
   }, [product?.id]);
 
-  if (productQuery.isLoading) {
+  if (productId !== null && productQuery.isLoading) {
     return (
       <div className="store-page">
         <StoreHeader onSignOut={signOut} />
@@ -120,7 +122,7 @@ export function ProductDetailsPage() {
         <section className="details-main">
           <div className="details-gallery">
             <div className="details-main-image">
-              <img src={currentImage} alt={product.title} />
+              <img src={currentImage ?? product.thumbnail} alt={product.title} />
             </div>
 
             <div className="details-thumbnails" aria-label="Imagens do produto">
@@ -195,15 +197,16 @@ export function ProductDetailsPage() {
             <article>
               <span>Dimensoes</span>
               <h3>
-                {product.dimensions.width} x {product.dimensions.height} x{" "}
-                {product.dimensions.depth} cm
+                {dimensions
+                  ? `${dimensions.width} x ${dimensions.height} x ${dimensions.depth} cm`
+                  : "Nao informado"}
               </h3>
               <p>Largura, altura e profundidade cadastradas para o item.</p>
             </article>
             <article>
               <span>Categoria</span>
               <h3>{product.category}</h3>
-              <p>{product.tags.length > 0 ? product.tags.join(", ") : "Sem tags cadastradas."}</p>
+              <p>{productTags.length > 0 ? productTags.join(", ") : "Sem tags cadastradas."}</p>
             </article>
           </div>
         </section>
