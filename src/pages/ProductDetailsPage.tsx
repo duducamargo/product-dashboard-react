@@ -19,6 +19,10 @@ function getProductId(value: string | undefined) {
 }
 
 function isNotFoundError(error: unknown) {
+  if (!error || typeof error !== "object") {
+    return false;
+  }
+
   return (error as { response?: { status?: number } }).response?.status === 404;
 }
 
