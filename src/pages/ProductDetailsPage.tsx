@@ -77,6 +77,7 @@ export function ProductDetailsPage() {
   const productQuery = useProduct(productId);
   const product = productQuery.data;
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [hasCopiedProductLink, setHasCopiedProductLink] = useState(false);
   const productImages = useMemo(
     () => (product ? Array.from(new Set([product.thumbnail, ...(product.images ?? [])])) : []),
     [product]
@@ -98,6 +99,27 @@ export function ProductDetailsPage() {
   useEffect(() => {
     setSelectedImage(null);
   }, [product?.id]);
+
+  async function handleShareProduct() {
+    const productUrl = window.location.href;
+
+    if (navigator.clipboard?.writeText) {
+      await navigator.clipboard.writeText(productUrl);
+    } else {
+      const linkField = document.createElement("textarea");
+      linkField.value = productUrl;
+      linkField.setAttribute("readonly", "");
+      linkField.style.position = "fixed";
+      linkField.style.opacity = "0";
+      document.body.appendChild(linkField);
+      linkField.select();
+      document.execCommand("copy");
+      document.body.removeChild(linkField);
+    }
+
+    setHasCopiedProductLink(true);
+    window.setTimeout(() => setHasCopiedProductLink(false), 1800);
+  }
 
   if (productId !== null && productQuery.isLoading) {
     return (
@@ -220,12 +242,21 @@ export function ProductDetailsPage() {
 
               <div className="details-divider" />
 
-              <button className="details-primary-action" type="button">
-                Adicionar ao carrinho
-              </button>
-              <div className="details-secondary-actions">
-                <button type="button">Favoritar</button>
-                <button type="button">Compartilhar</button>
+              <div className="details-actions">
+                <button className="details-primary-action" type="button">
+                  Adicionar ao carrinho
+                </button>
+                <button
+                  className="details-share-action"
+                  type="button"
+                  aria-label={hasCopiedProductLink ? "Link copiado" : "Copiar link completo do produto"}
+                  title={hasCopiedProductLink ? "Link copiado" : "Copiar link completo do produto"}
+                  onClick={() => void handleShareProduct()}
+                >
+                  <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24">
+                    <path d="M18 16.1c-.76 0-1.44.3-1.96.77L8.91 12.7a3.27 3.27 0 0 0 0-1.39l7.05-4.13A2.99 2.99 0 1 0 15 5c0 .24.03.47.08.69L8.03 9.82a3 3 0 1 0 0 4.36l7.12 4.18c-.04.2-.06.42-.06.64A2.91 2.91 0 1 0 18 16.1Z" />
+                  </svg>
+                </button>
               </div>
             </section>
           </section>

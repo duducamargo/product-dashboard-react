@@ -29,6 +29,11 @@
   color: #394255;
 }
 
+.details-actions {
+  display: flex;
+  gap: 12px;
+}
+
 .details-back-link {
   font-size: 0.9rem;
   font-weight: 900;
@@ -199,11 +204,46 @@
   border-radius: 6px;
   color: #ffffff;
   display: inline-flex;
+  flex: 1;
   font-weight: 900;
   justify-content: center;
   min-height: 48px;
   text-decoration: none;
   width: 100%;
+}
+
+.details-share-action {
+  align-items: center;
+  background: #ffffff;
+  border: 1px solid #cfd5e3;
+  border-radius: 6px;
+  color: #394255;
+  display: inline-flex;
+  flex: 0 0 48px;
+  height: 48px;
+  justify-content: center;
+  transition:
+    border-color 0.2s ease,
+    color 0.2s ease,
+    transform 0.2s ease;
+  width: 48px;
+}
+
+.details-share-action:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+  transform: translateY(-1px);
+}
+
+.details-share-action:focus-visible {
+  outline: 3px solid rgb(61 42 229 / 18%);
+  outline-offset: 2px;
+}
+
+.details-share-action svg {
+  fill: currentColor;
+  height: 20px;
+  width: 20px;
 }
 
 .details-secondary-actions {
