@@ -12,6 +12,12 @@ const currencyFormatter = new Intl.NumberFormat("pt-BR", {
   style: "currency",
 });
 
+const dateFormatter = new Intl.DateTimeFormat("pt-BR", {
+  day: "2-digit",
+  month: "long",
+  year: "numeric",
+});
+
 function getProductId(value: string | undefined) {
   const productId = Number(value);
 
@@ -30,6 +36,16 @@ function getNumber(value: unknown, fallback = 0) {
   return typeof value === "number" && Number.isFinite(value) ? value : fallback;
 }
 
+function getGalleryImages(thumbnail: string, images: string[]) {
+  const uniqueImages = Array.from(new Set([thumbnail, ...images].filter(Boolean)));
+
+  if (uniqueImages.length < 2) {
+    return uniqueImages;
+  }
+
+  return [uniqueImages[1], uniqueImages[0], ...uniqueImages.slice(2)];
+}
+
 function translateAvailabilityStatus(status?: string) {
   const translations: Record<string, string> = {
     "In Stock": "Em estoque",
@@ -38,6 +54,27 @@ function translateAvailabilityStatus(status?: string) {
   };
 
   return status ? (translations[status] ?? status) : "Em estoque";
+}
+
+function translateReviewComment(comment: string) {
+  const translations: Record<string, string> = {
+    "Very unhappy with my purchase!": "Muito insatisfeito com a minha compra.",
+    "Not as described!": "Nao corresponde ao que foi descrito.",
+    "Very satisfied!": "Muito satisfeito com a compra.",
+    "Would not recommend!": "Nao recomendaria este produto.",
+    "Highly impressed!": "Fiquei muito impressionado.",
+    "Fast shipping!": "Entrega rapida.",
+    "Great value for money!": "Otimo custo-beneficio.",
+    "Excellent quality!": "Excelente qualidade.",
+  };
+
+  return translations[comment] ?? comment;
+}
+
+function formatReviewDate(value: string) {
+  const date = new Date(value);
+
+  return Number.isNaN(date.getTime()) ? "Data nao informada" : dateFormatter.format(date);
 }
 
 type DetailsErrorBoundaryState = {
@@ -79,7 +116,7 @@ export function ProductDetailsPage() {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [hasCopiedProductLink, setHasCopiedProductLink] = useState(false);
   const productImages = useMemo(
-    () => (product ? Array.from(new Set([product.thumbnail, ...(product.images ?? [])])) : []),
+    () => (product ? getGalleryImages(product.thumbnail, product.images ?? []) : []),
     [product]
   );
   const currentImage = selectedImage ?? productImages[0];
@@ -91,6 +128,8 @@ export function ProductDetailsPage() {
   const productPrice = getNumber(product?.price);
   const discountPercentage = getNumber(product?.discountPercentage);
   const productWeight = getNumber(product?.weight);
+  const productStock = getNumber(product?.stock);
+  const productReviews = product?.reviews ?? [];
   const originalPrice =
     product && discountPercentage > 0
       ? productPrice / (1 - discountPercentage / 100)
@@ -238,6 +277,8 @@ export function ProductDetailsPage() {
                 <span>{product.shippingInformation ?? "Envio informado no checkout"}</span>
                 <span>{product.returnPolicy ?? "Politica de devolucao indisponivel"}</span>
                 <span>Pedido minimo: {product.minimumOrderQuantity ?? 1}</span>
+                <span>Estoque: {productStock} unidades</span>
+                <span>Desconto: {discountPercentage.toFixed(2)}%</span>
               </div>
 
               <div className="details-divider" />
@@ -283,7 +324,55 @@ export function ProductDetailsPage() {
                 <h3>{product.category}</h3>
                 <p>{productTags.length > 0 ? productTags.join(", ") : "Sem tags cadastradas."}</p>
               </article>
+              <article>
+                <span>Estoque</span>
+                <h3>{productStock} unidades</h3>
+                <p>{translateAvailabilityStatus(product.availabilityStatus)} para compra no catalogo.</p>
+              </article>
+              <article>
+                <span>Identificacao</span>
+                <h3>{product.sku}</h3>
+                <p>Codigo de barras: {product.meta?.barcode ?? "Nao informado"}.</p>
+              </article>
+              <article>
+                <span>Compra</span>
+                <h3>Minimo de {product.minimumOrderQuantity ?? 1} unidade(s)</h3>
+                <p>
+                  {discountPercentage > 0
+                    ? `Desconto aplicado de ${discountPercentage.toFixed(2)}%.`
+                    : "Produto sem desconto ativo."}
+                </p>
+              </article>
             </div>
+          </section>
+
+          <section className="product-reviews" aria-labelledby="product-reviews-title">
+            <div className="product-reviews-heading">
+              <div>
+                <span>Avaliacoes</span>
+                <h2 id="product-reviews-title">O que os usuarios dizem</h2>
+              </div>
+              <strong>{productRating.toFixed(1)} / 5</strong>
+            </div>
+
+            {productReviews.length > 0 ? (
+              <div className="product-reviews-grid">
+                {productReviews.map((review) => (
+                  <article className="product-review-card" key={`${review.reviewerEmail}-${review.date}`}>
+                    <div className="product-review-card-header">
+                      <div>
+                        <h3>{review.reviewerName}</h3>
+                        <p>{formatReviewDate(review.date)}</p>
+                      </div>
+                      <strong>{getNumber(review.rating).toFixed(1)}</strong>
+                    </div>
+                    <p>{translateReviewComment(review.comment)}</p>
+                  </article>
+                ))}
+              </div>
+            ) : (
+              <p className="product-reviews-empty">Este produto ainda nao possui avaliacoes.</p>
+            )}
           </section>
         </main>
       </DetailsErrorBoundary>
