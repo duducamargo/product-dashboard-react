@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { AppFooter } from "@/components/layout/AppFooter";
+import { NotFoundContent } from "@/components/feedback/NotFoundContent";
 import { StoreHeader } from "@/components/layout/StoreHeader";
 import { ProductBreadcrumb } from "@/components/product-details/ProductBreadcrumb";
 import { ProductDetailsErrorBoundary } from "@/components/product-details/ProductDetailsErrorBoundary";
@@ -114,7 +115,7 @@ export function ProductDetailsPage() {
     return (
       <div className="store-page">
         <StoreHeader onSignOut={signOut} search={headerSearchConfig} />
-        <ProductDetailsState
+        <NotFoundContent
           actionLabel="Voltar ao catalogo"
           actionTo="/home"
           description="O produto solicitado nao existe ou nao esta mais disponivel no catalogo."
