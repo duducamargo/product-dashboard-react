@@ -1,18 +1,22 @@
 import { useState } from "react";
 import { ProductSearchCombobox } from "@/components/product/ProductSearchCombobox";
 import { Link } from "react-router-dom";
+import { appPaths } from "@/routes/paths";
 import techstoreIconUrl from "@/assets/techstore-icon.svg";
 import type { Product } from "@/types/product";
+import "@/components/layout/StoreLayout.css";
+
+export type StoreHeaderSearchConfig = {
+  isLoading: boolean;
+  value: string;
+  suggestions: Product[];
+  onChange: (value: string) => void;
+  onSelect: (product: Product) => void;
+};
 
 type StoreHeaderProps = {
   onSignOut: () => void;
-  search?: {
-    isLoading: boolean;
-    value: string;
-    suggestions: Product[];
-    onChange: (value: string) => void;
-    onSelect: (product: Product) => void;
-  };
+  search?: StoreHeaderSearchConfig;
 };
 
 function LogoutIcon() {
@@ -73,7 +77,7 @@ export function StoreHeader({ onSignOut, search }: StoreHeaderProps) {
 
   return (
     <header className={search ? "store-header store-header-with-search" : "store-header"}>
-      <Link className="store-brand" to="/home" aria-label="TechStore home">
+      <Link className="store-brand" to={appPaths.home} aria-label="TechStore home">
         <img className="store-brand-icon" src={techstoreIconUrl} alt="" aria-hidden="true" />
         <span>TechStore</span>
       </Link>

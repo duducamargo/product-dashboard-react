@@ -7,10 +7,9 @@ import { ProductsPagination } from "@/components/home/ProductsPagination";
 import { ProductsSkeletonGrid } from "@/components/home/ProductsSkeletonGrid";
 import { ProductsState } from "@/components/home/ProductsState";
 import { ProductsSummary } from "@/components/home/ProductsSummary";
-import { AppFooter } from "@/components/layout/AppFooter";
-import { StoreHeader } from "@/components/layout/StoreHeader";
+import { StorePageLayout } from "@/components/layout/StorePageLayout";
 import { ProductSearchCombobox } from "@/components/product/ProductSearchCombobox";
-import { useAuth } from "@/hooks/useAuth";
+import type { StoreHeaderSearchConfig } from "@/components/layout/StoreHeader";
 import {
   PRODUCTS_PAGE_SIZE,
   useProductCategories,
@@ -36,7 +35,6 @@ function getPageFromSearchParams(searchParams: URLSearchParams) {
 }
 
 export function HomePage() {
-  const { signOut } = useAuth();
   const [searchParams, setSearchParams] = useSearchParams();
   const [search, setSearch] = useState(() => searchParams.get("search") ?? "");
   const [category, setCategory] = useState(() => searchParams.get("category") ?? "");
@@ -59,6 +57,21 @@ export function HomePage() {
 
   const productsQuery = useProducts(filters);
   const suggestionsQuery = useProductSuggestions(search);
+  const headerSearchConfig = useMemo<StoreHeaderSearchConfig>(
+    () => ({
+      isLoading: suggestionsQuery.isLoading || suggestionsQuery.isSearching,
+      value: search,
+      suggestions: suggestionsQuery.data ?? [],
+      onChange: setSearch,
+      onSelect: (product) => setSearch(product.title),
+    }),
+    [
+      search,
+      suggestionsQuery.data,
+      suggestionsQuery.isLoading,
+      suggestionsQuery.isSearching,
+    ]
+  );
   const categoriesQuery = useProductCategories();
   const products = productsQuery.data?.products ?? [];
   const totalProducts = productsQuery.data?.total ?? 0;
@@ -118,18 +131,7 @@ export function HomePage() {
   }
 
   return (
-    <div className="store-page">
-      <StoreHeader
-        onSignOut={signOut}
-        search={{
-          isLoading: suggestionsQuery.isLoading || suggestionsQuery.isSearching,
-          value: search,
-          suggestions: suggestionsQuery.data ?? [],
-          onChange: setSearch,
-          onSelect: (product) => setSearch(product.title),
-        }}
-      />
-
+    <StorePageLayout search={headerSearchConfig}>
       <main className="home-page">
         <HomeHero />
 
@@ -206,8 +208,6 @@ export function HomePage() {
           </section>
         </div>
       </main>
-
-      <AppFooter />
-    </div>
+    </StorePageLayout>
   );
 }

@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
-import { AppFooter } from "@/components/layout/AppFooter";
-import { StoreHeader } from "@/components/layout/StoreHeader";
+import { Link, useParams } from "react-router-dom";
+import { StorePageLayout } from "@/components/layout/StorePageLayout";
 import { ProductBreadcrumb } from "@/components/product-details/ProductBreadcrumb";
 import { ProductDetailsErrorBoundary } from "@/components/product-details/ProductDetailsErrorBoundary";
 import { ProductDetailsState } from "@/components/product-details/ProductDetailsState";
@@ -9,50 +8,26 @@ import { ProductGallery } from "@/components/product-details/ProductGallery";
 import { ProductInfoPanel } from "@/components/product-details/ProductInfoPanel";
 import { ProductReviews } from "@/components/product-details/ProductReviews";
 import { ProductTechnicalSpecs } from "@/components/product-details/ProductTechnicalSpecs";
-import { useAuth } from "@/hooks/useAuth";
-import { useProduct, useProductSuggestions } from "@/hooks/useProducts";
-import type { Product } from "@/types/product";
+import { useProductHeaderSearch } from "@/hooks/useProductHeaderSearch";
+import { useProduct } from "@/hooks/useProducts";
+import { appPaths } from "@/routes/paths";
 import {
-  copyTextToClipboard,
   getGalleryImages,
   getNumber,
   getProductId,
   isNotFoundError,
+  shareProductLink,
 } from "@/utils/productDetails";
-import "@/pages/HomePage.css";
 import "@/pages/ProductDetailsPage.css";
 
 export function ProductDetailsPage() {
   const { id } = useParams();
-  const navigate = useNavigate();
-  const { signOut } = useAuth();
   const productId = getProductId(id);
   const productQuery = useProduct(productId);
   const product = productQuery.data;
-  const [headerSearch, setHeaderSearch] = useState("");
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [hasCopiedProductLink, setHasCopiedProductLink] = useState(false);
-  const suggestionsQuery = useProductSuggestions(headerSearch);
-
-  const headerSearchConfig = useMemo(
-    () => ({
-      isLoading: suggestionsQuery.isLoading || suggestionsQuery.isSearching,
-      value: headerSearch,
-      suggestions: suggestionsQuery.data ?? [],
-      onChange: setHeaderSearch,
-      onSelect: (selectedProduct: Product) => {
-        setHeaderSearch(selectedProduct.title);
-        navigate(`/products/${selectedProduct.id}`);
-      },
-    }),
-    [
-      headerSearch,
-      navigate,
-      suggestionsQuery.data,
-      suggestionsQuery.isLoading,
-      suggestionsQuery.isSearching,
-    ]
-  );
+  const headerSearchConfig = useProductHeaderSearch();
 
   const productImages = useMemo(
     () => (product ? getGalleryImages(product.thumbnail, product.images ?? []) : []),
@@ -78,21 +53,9 @@ export function ProductDetailsPage() {
   }, [product?.id]);
 
   async function handleShareProduct() {
-    const url = window.location.href;
+    const hasCopiedLink = await shareProductLink(window.location.href);
 
-    if (navigator.share) {
-      try {
-        await navigator.share({
-          title: document.title,
-          text: "Confira este produto",
-          url: url,
-        });
-      } catch (error) {
-        console.error("Erro ao compartilhar:", error);
-      }
-    } else {
-      // Fallback: copia o link
-      await copyTextToClipboard(url);
+    if (hasCopiedLink) {
       setHasCopiedProductLink(true);
       window.setTimeout(() => setHasCopiedProductLink(false), 1800);
     }
@@ -100,55 +63,47 @@ export function ProductDetailsPage() {
 
   if (productId !== null && productQuery.isLoading) {
     return (
-      <div className="store-page">
-        <StoreHeader onSignOut={signOut} search={headerSearchConfig} />
+      <StorePageLayout search={headerSearchConfig}>
         <main className="product-details-page">
           <section className="details-skeleton" aria-busy="true" aria-label="Carregando produto" />
         </main>
-        <AppFooter />
-      </div>
+      </StorePageLayout>
     );
   }
 
   if (hasNotFound) {
     return (
-      <div className="store-page">
-        <StoreHeader onSignOut={signOut} search={headerSearchConfig} />
+      <StorePageLayout search={headerSearchConfig}>
         <ProductDetailsState
           actionLabel="Voltar ao catalogo"
-          actionTo="/home"
+          actionTo={appPaths.home}
           description="O produto solicitado nao existe ou nao esta mais disponivel no catalogo."
           title="Produto nao encontrado"
         />
-        <AppFooter />
-      </div>
+      </StorePageLayout>
     );
   }
 
   if (productQuery.isError || !product) {
     return (
-      <div className="store-page">
-        <StoreHeader onSignOut={signOut} search={headerSearchConfig} />
+      <StorePageLayout search={headerSearchConfig}>
         <ProductDetailsState
           actionLabel="Tentar novamente"
           description="Verifique sua conexao e tente novamente."
           title="Nao foi possivel carregar o produto"
           onAction={() => productQuery.refetch()}
         />
-        <AppFooter />
-      </div>
+      </StorePageLayout>
     );
   }
 
   return (
-    <div className="store-page">
-      <StoreHeader onSignOut={signOut} search={headerSearchConfig} />
-
+    <StorePageLayout search={headerSearchConfig}>
       <ProductDetailsErrorBoundary>
         <main className="product-details-page">
           <ProductBreadcrumb category={product.category} title={product.title} />
 
-          <Link className="details-back-link" to="/home">
+          <Link className="details-back-link" to={appPaths.home}>
             {"\u2190"} Voltar ao catalogo
           </Link>
 
@@ -183,8 +138,6 @@ export function ProductDetailsPage() {
           <ProductReviews productRating={productRating} reviews={productReviews} />
         </main>
       </ProductDetailsErrorBoundary>
-
-      <AppFooter />
-    </div>
+    </StorePageLayout>
   );
 }
