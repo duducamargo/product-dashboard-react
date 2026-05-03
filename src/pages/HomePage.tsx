@@ -1,23 +1,213 @@
-import { useAuth } from "@/hooks/useAuth";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { useSearchParams } from "react-router-dom";
+import { HomeHero } from "@/components/home/HomeHero";
+import { ProductFilters } from "@/components/home/ProductFilters";
+import { ProductsGrid } from "@/components/home/ProductsGrid";
+import { ProductsPagination } from "@/components/home/ProductsPagination";
+import { ProductsSkeletonGrid } from "@/components/home/ProductsSkeletonGrid";
+import { ProductsState } from "@/components/home/ProductsState";
+import { ProductsSummary } from "@/components/home/ProductsSummary";
+import { StorePageLayout } from "@/components/layout/StorePageLayout";
+import { ProductSearchCombobox } from "@/components/product/ProductSearchCombobox";
+import type { StoreHeaderSearchConfig } from "@/components/layout/StoreHeader";
+import {
+  PRODUCTS_PAGE_SIZE,
+  useProductCategories,
+  useProducts,
+  useProductSuggestions,
+} from "@/hooks/useProducts";
 import "@/pages/HomePage.css";
 
+function toOptionalNumber(value: string) {
+  if (!value) {
+    return undefined;
+  }
+
+  const parsedValue = Number(value);
+
+  return Number.isFinite(parsedValue) ? parsedValue : undefined;
+}
+
+function getPageFromSearchParams(searchParams: URLSearchParams) {
+  const page = Number(searchParams.get("page"));
+
+  return Number.isInteger(page) && page > 0 ? page : 1;
+}
+
 export function HomePage() {
-  const { user, signOut } = useAuth();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [search, setSearch] = useState(() => searchParams.get("search") ?? "");
+  const [category, setCategory] = useState(() => searchParams.get("category") ?? "");
+  const [isCategoryFilterOpen, setIsCategoryFilterOpen] = useState(true);
+  const [minPrice, setMinPrice] = useState(() => searchParams.get("minPrice") ?? "");
+  const [maxPrice, setMaxPrice] = useState(() => searchParams.get("maxPrice") ?? "");
+  const [page, setPage] = useState(() => getPageFromSearchParams(searchParams));
+  const hasMounted = useRef(false);
+
+  const filters = useMemo(
+    () => ({
+      category,
+      maxPrice: toOptionalNumber(maxPrice),
+      minPrice: toOptionalNumber(minPrice),
+      page,
+      search,
+    }),
+    [category, maxPrice, minPrice, page, search]
+  );
+
+  const productsQuery = useProducts(filters);
+  const suggestionsQuery = useProductSuggestions(search);
+  const headerSearchConfig = useMemo<StoreHeaderSearchConfig>(
+    () => ({
+      isLoading: suggestionsQuery.isLoading || suggestionsQuery.isSearching,
+      value: search,
+      suggestions: suggestionsQuery.data ?? [],
+      onChange: setSearch,
+      onSelect: (product) => setSearch(product.title),
+    }),
+    [
+      search,
+      suggestionsQuery.data,
+      suggestionsQuery.isLoading,
+      suggestionsQuery.isSearching,
+    ]
+  );
+  const categoriesQuery = useProductCategories();
+  const products = productsQuery.data?.products ?? [];
+  const totalProducts = productsQuery.data?.total ?? 0;
+  const firstItem = totalProducts === 0 ? 0 : (page - 1) * PRODUCTS_PAGE_SIZE + 1;
+  const lastItem = Math.min(page * PRODUCTS_PAGE_SIZE, totalProducts);
+  const hasActiveFilters = Boolean(search || category || minPrice || maxPrice);
+  const isInitialLoading = productsQuery.isLoading || categoriesQuery.isLoading;
+  const isUpdating =
+    (productsQuery.isFetching && !productsQuery.isLoading) || productsQuery.isSearching;
+  const hasRequestError = productsQuery.isError || categoriesQuery.isError;
+
+  useEffect(() => {
+    if (!hasMounted.current) {
+      hasMounted.current = true;
+      return;
+    }
+
+    setPage(1);
+  }, [category, maxPrice, minPrice, search]);
+
+  useEffect(() => {
+    const nextParams = new URLSearchParams();
+
+    if (search.trim()) {
+      nextParams.set("search", search.trim());
+    }
+
+    if (category) {
+      nextParams.set("category", category);
+    }
+
+    if (minPrice) {
+      nextParams.set("minPrice", minPrice);
+    }
+
+    if (maxPrice) {
+      nextParams.set("maxPrice", maxPrice);
+    }
+
+    if (page > 1) {
+      nextParams.set("page", String(page));
+    }
+
+    setSearchParams(nextParams, { replace: true });
+  }, [category, maxPrice, minPrice, page, search, setSearchParams]);
+
+  function handleClearFilters() {
+    setSearch("");
+    setCategory("");
+    setMinPrice("");
+    setMaxPrice("");
+  }
+
+  function handleRetry() {
+    productsQuery.refetch();
+    categoriesQuery.refetch();
+  }
 
   return (
-    <main className="home-placeholder">
-      <section>
-        <p className="eyebrow">Area autenticada</p>
-        <h1>Login realizado com sucesso</h1>
-        <p>
-          {user?.firstName
-            ? `${user.firstName}, a listagem de produtos sera implementada na proxima etapa.`
-            : "A listagem de produtos sera implementada na proxima etapa."}
-        </p>
-        <button className="button-secondary" type="button" onClick={signOut}>
-          Sair
-        </button>
-      </section>
-    </main>
+    <StorePageLayout search={headerSearchConfig}>
+      <main className="home-page">
+        <HomeHero />
+
+        <div className="catalog-layout">
+          <ProductSearchCombobox
+            className="mobile-product-search"
+            id="mobile-product-search-suggestions"
+            isLoading={suggestionsQuery.isLoading || suggestionsQuery.isSearching}
+            suggestions={suggestionsQuery.data ?? []}
+            value={search}
+            onChange={setSearch}
+            onSelect={(product) => setSearch(product.title)}
+          />
+
+          <ProductFilters
+            categories={categoriesQuery.data ?? []}
+            category={category}
+            hasActiveFilters={hasActiveFilters}
+            isCategoryFilterOpen={isCategoryFilterOpen}
+            maxPrice={maxPrice}
+            minPrice={minPrice}
+            onCategoryChange={setCategory}
+            onClearFilters={handleClearFilters}
+            onMaxPriceChange={setMaxPrice}
+            onMinPriceChange={setMinPrice}
+            onToggleCategoryFilter={() => setIsCategoryFilterOpen((isOpen) => !isOpen)}
+          />
+
+          <section className="catalog-content">
+            {hasRequestError ? (
+              <ProductsState
+                actionLabel="Tentar novamente"
+                description="Verifique sua conexao e tente novamente."
+                title="Nao foi possivel carregar os produtos"
+                role="alert"
+                variant="error"
+                onAction={handleRetry}
+              />
+            ) : null}
+
+            {!hasRequestError ? (
+              <>
+                {!isInitialLoading ? (
+                  <ProductsSummary
+                    firstItem={firstItem}
+                    lastItem={lastItem}
+                    totalProducts={totalProducts}
+                  />
+                ) : null}
+
+                {isInitialLoading ? <ProductsSkeletonGrid /> : null}
+
+                {!isInitialLoading && products.length === 0 ? (
+                  <ProductsState
+                    actionLabel="Limpar filtros"
+                    description="Buscamos em todo o catalogo, mas nenhum produto corresponde aos filtros atuais."
+                    title="Nenhum produto encontrado"
+                    onAction={handleClearFilters}
+                  />
+                ) : null}
+
+                {!isInitialLoading && products.length > 0 ? (
+                  <>
+                    <ProductsGrid isUpdating={isUpdating} products={products} />
+                    <ProductsPagination
+                      currentPage={page}
+                      totalPages={productsQuery.totalPages}
+                      onPageChange={setPage}
+                    />
+                  </>
+                ) : null}
+              </>
+            ) : null}
+          </section>
+        </div>
+      </main>
+    </StorePageLayout>
   );
 }

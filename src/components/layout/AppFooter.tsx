@@ -2,10 +2,8 @@ import "@/components/layout/AppFooter.css";
 import techstoreIconUrl from "@/assets/techstore-icon.svg";
 
 const FOOTER_LINKS = [
-  { label: "Termos de Privacidade", href: "/" },
-  { label: "Termos de Uso", href: "/" },
-  { label: "Github", href: "/" },
-  { label: "Documentação", href: "/" },
+  { label: "Github", href: "https://github.com/duducamargo/product-dashboard-react" },
+  { label: "Documentação", href: "https://github.com/duducamargo/product-dashboard-react/blob/main/README.md" },
 ] as const;
 
 export function AppFooter() {
@@ -22,7 +20,7 @@ export function AppFooter() {
 
       <nav className="app-footer-nav" aria-label="Footer links">
         {FOOTER_LINKS.map((link) => (
-          <a key={link.label} href={link.href}>
+          <a key={link.label} href={link.href} target="_blank">
             {link.label}
           </a>
         ))}

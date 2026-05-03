@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import type { PropsWithChildren } from "react";
 import { useNavigate } from "react-router-dom";
 import { AuthContext, type AuthContextValue } from "@/providers/AuthContext";
+import { appPaths } from "@/routes/paths";
 import type { LoginInput } from "@/schemas/loginSchema";
 import { authService } from "@/services/authService";
 import type { AuthSession } from "@/types/auth";
@@ -25,8 +26,9 @@ export function AuthProvider({ children }: PropsWithChildren) {
   );
 
   const signOut = useCallback(() => {
+    authStorage.clear();
     setSession(null);
-    navigate("/", { replace: true });
+    navigate(appPaths.login, { replace: true });
   }, [navigate]);
 
   const refreshSession = useCallback(async () => {
@@ -40,8 +42,9 @@ export function AuthProvider({ children }: PropsWithChildren) {
       const nextSession = await authService.refresh(session.refreshToken, session.user);
       setSession(nextSession);
     } catch {
+      authStorage.clear();
       setSession(null);
-      navigate("/", { replace: true });
+      navigate(appPaths.login, { replace: true });
     } finally {
       setIsSessionLoading(false);
     }
