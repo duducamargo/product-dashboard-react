@@ -26,6 +26,7 @@ export function AuthProvider({ children }: PropsWithChildren) {
   );
 
   const signOut = useCallback(() => {
+    authStorage.clear();
     setSession(null);
     navigate(appPaths.login, { replace: true });
   }, [navigate]);
@@ -41,6 +42,7 @@ export function AuthProvider({ children }: PropsWithChildren) {
       const nextSession = await authService.refresh(session.refreshToken, session.user);
       setSession(nextSession);
     } catch {
+      authStorage.clear();
       setSession(null);
       navigate(appPaths.login, { replace: true });
     } finally {

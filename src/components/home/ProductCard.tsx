@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import type { Product } from "@/types/product";
 import { currencyFormatter } from "@/utils/formatters";
+import { formatProductCategory } from "@/utils/productCategory";
 
 type ProductCardProps = {
   product: Product;
@@ -14,7 +15,7 @@ export function ProductCard({ product }: ProductCardProps) {
       </div>
       <div className="product-card-content">
         <div className="product-kicker">
-          <span>{product.category}</span>
+          <span>{formatProductCategory(product.category)}</span>
           <strong aria-label={`Avaliacao ${product.rating.toFixed(1)}`}>
             <span aria-hidden="true">{"\u2605"}</span>
             {product.rating.toFixed(1)}

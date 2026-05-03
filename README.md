@@ -90,7 +90,7 @@ senha: emilyspass
 - Validacao de formulario com React Hook Form e Zod.
 - Integracao com o endpoint `/auth/login` da DummyJSON.
 - Controle de sessao com token salvo no client.
-- Persistencia de sessao no `localStorage`.
+- Persistencia de sessao em cookie criado pelo frontend, com migracao do valor antigo salvo em `localStorage`.
 - Rota protegida para paginas autenticadas.
 - Refresh token encapsulado no `authService` e exposto pelo `AuthProvider`.
 - Token enviado automaticamente nas requisicoes via interceptor do Axios.
@@ -353,4 +353,5 @@ Como o projeto nao possui backend proprio, o build estatico e servido por `scrip
 - A DummyJSON retorna nomes, descricoes e avaliacoes em ingles. A interface da aplicacao esta em portugues, mas os dados textuais dos produtos seguem o retorno original da API.
 - Os precos sao numericos na API e foram formatados na interface com `Intl.NumberFormat`.
 - Nao ha backend proprio; toda comunicacao e feita diretamente com a API publica.
+- Como nao ha backend proprio, o cookie de sessao e criado no frontend e nao pode ser `HttpOnly`. Em um ambiente produtivo, o ideal seria o backend emitir o refresh token em cookie `HttpOnly`, `Secure` e `SameSite`.
 - Testes automatizados nao foram adicionados nesta versao.

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import type { Product } from "@/types/product";
+import { formatProductCategory } from "@/utils/productCategory";
 
 type ProductSearchComboboxProps = {
   className?: string;
@@ -96,7 +97,7 @@ export function ProductSearchCombobox({
                   <img src={product.thumbnail} alt="" aria-hidden="true" />
                   <span>
                     <strong>{product.title}</strong>
-                    <small>{product.category}</small>
+                    <small>{formatProductCategory(product.category)}</small>
                   </span>
                   <em aria-label={`Avaliacao ${product.rating.toFixed(1)}`}>
                     {"\u2605"} {product.rating.toFixed(1)}

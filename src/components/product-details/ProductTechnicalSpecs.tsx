@@ -1,4 +1,5 @@
 import type { Product } from "@/types/product";
+import { formatProductCategory } from "@/utils/productCategory";
 
 type ProductTechnicalSpecsProps = {
   product: Product;
@@ -31,7 +32,7 @@ export function ProductTechnicalSpecs({
         </article>
         <article>
           <span>Categoria</span>
-          <h3>{product.category}</h3>
+          <h3>{formatProductCategory(product.category)}</h3>
           <p>{productTags.length > 0 ? productTags.join(", ") : "Sem tags cadastradas."}</p>
         </article>
         <article>
