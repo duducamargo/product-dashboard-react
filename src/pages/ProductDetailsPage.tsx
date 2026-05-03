@@ -56,21 +56,6 @@ function translateAvailabilityStatus(status?: string) {
   return status ? (translations[status] ?? status) : "Em estoque";
 }
 
-function translateReviewComment(comment: string) {
-  const translations: Record<string, string> = {
-    "Very unhappy with my purchase!": "Muito insatisfeito com a minha compra.",
-    "Not as described!": "Nao corresponde ao que foi descrito.",
-    "Very satisfied!": "Muito satisfeito com a compra.",
-    "Would not recommend!": "Nao recomendaria este produto.",
-    "Highly impressed!": "Fiquei muito impressionado.",
-    "Fast shipping!": "Entrega rapida.",
-    "Great value for money!": "Otimo custo-beneficio.",
-    "Excellent quality!": "Excelente qualidade.",
-  };
-
-  return translations[comment] ?? comment;
-}
-
 function formatReviewDate(value: string) {
   const date = new Date(value);
 
@@ -229,7 +214,9 @@ export function ProductDetailsPage() {
         <main className="product-details-page">
           <nav className="details-breadcrumb" aria-label="Breadcrumb">
             <Link to="/home">Home</Link>
+            <span aria-hidden="true">›</span>
             <span>{product.category}</span>
+            <span aria-hidden="true">›</span>
             <strong>{product.title}</strong>
           </nav>
 
@@ -365,7 +352,7 @@ export function ProductDetailsPage() {
                       </div>
                       <strong>{getNumber(review.rating).toFixed(1)}</strong>
                     </div>
-                    <p>{translateReviewComment(review.comment)}</p>
+                    <p>{review.comment}</p>
                   </article>
                 ))}
               </div>
