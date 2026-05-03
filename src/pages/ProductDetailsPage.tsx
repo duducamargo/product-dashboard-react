@@ -78,9 +78,24 @@ export function ProductDetailsPage() {
   }, [product?.id]);
 
   async function handleShareProduct() {
-    await copyTextToClipboard(window.location.href);
-    setHasCopiedProductLink(true);
-    window.setTimeout(() => setHasCopiedProductLink(false), 1800);
+    const url = window.location.href;
+
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: document.title,
+          text: "Confira este produto",
+          url: url,
+        });
+      } catch (error) {
+        console.error("Erro ao compartilhar:", error);
+      }
+    } else {
+      // Fallback: copia o link
+      await copyTextToClipboard(url);
+      setHasCopiedProductLink(true);
+      window.setTimeout(() => setHasCopiedProductLink(false), 1800);
+    }
   }
 
   if (productId !== null && productQuery.isLoading) {
