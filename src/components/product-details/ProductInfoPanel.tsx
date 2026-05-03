@@ -1,5 +1,6 @@
 import type { Product } from "@/types/product";
-import { productCurrencyFormatter, translateAvailabilityStatus } from "@/utils/productDetails";
+import { currencyFormatter } from "@/utils/formatters";
+import { translateAvailabilityStatus } from "@/utils/productDetails";
 
 type ProductInfoPanelProps = {
   product: Product;
@@ -49,8 +50,8 @@ export function ProductInfoPanel({
       </div>
 
       <div className="details-price-row">
-        <strong>{productCurrencyFormatter.format(productPrice)}</strong>
-        {originalPrice ? <span>{productCurrencyFormatter.format(originalPrice)}</span> : null}
+        <strong>{currencyFormatter.format(productPrice)}</strong>
+        {originalPrice ? <span>{currencyFormatter.format(originalPrice)}</span> : null}
       </div>
 
       <div className="details-divider" />

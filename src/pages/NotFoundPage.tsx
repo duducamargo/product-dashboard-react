@@ -1,11 +1,7 @@
-import { useMemo, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { AppFooter } from "@/components/layout/AppFooter";
-import { StoreHeader } from "@/components/layout/StoreHeader";
-import { useAuth } from "@/hooks/useAuth";
-import { useProductSuggestions } from "@/hooks/useProducts";
-import type { Product } from "@/types/product";
-import "@/pages/HomePage.css";
+import { Link } from "react-router-dom";
+import { StorePageLayout } from "@/components/layout/StorePageLayout";
+import { useProductHeaderSearch } from "@/hooks/useProductHeaderSearch";
+import { appPaths } from "@/routes/paths";
 import "@/pages/NotFoundPage.css";
 
 function NotFoundIcon() {
@@ -22,35 +18,10 @@ function NotFoundIcon() {
 }
 
 export function NotFoundPage() {
-  const navigate = useNavigate();
-  const { signOut } = useAuth();
-  const [headerSearch, setHeaderSearch] = useState("");
-  const suggestionsQuery = useProductSuggestions(headerSearch);
-
-  const headerSearchConfig = useMemo(
-    () => ({
-      isLoading: suggestionsQuery.isLoading || suggestionsQuery.isSearching,
-      value: headerSearch,
-      suggestions: suggestionsQuery.data ?? [],
-      onChange: setHeaderSearch,
-      onSelect: (selectedProduct: Product) => {
-        setHeaderSearch(selectedProduct.title);
-        navigate(`/products/${selectedProduct.id}`);
-      },
-    }),
-    [
-      headerSearch,
-      navigate,
-      suggestionsQuery.data,
-      suggestionsQuery.isLoading,
-      suggestionsQuery.isSearching,
-    ]
-  );
+  const headerSearchConfig = useProductHeaderSearch();
 
   return (
-    <div className="store-page">
-      <StoreHeader onSignOut={signOut} search={headerSearchConfig} />
-
+    <StorePageLayout search={headerSearchConfig}>
       <main className="not-found-page">
         <section className="not-found-content">
           <div className="not-found-illustration">
@@ -64,13 +35,11 @@ export function NotFoundPage() {
             navegando pelos produtos.
           </p>
 
-          <Link className="not-found-action" to="/home">
+          <Link className="not-found-action" to={appPaths.home}>
             Voltar ao catalogo
           </Link>
         </section>
       </main>
-
-      <AppFooter />
-    </div>
+    </StorePageLayout>
   );
 }
