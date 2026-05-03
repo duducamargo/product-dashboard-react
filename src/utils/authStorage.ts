@@ -20,6 +20,12 @@ function setCookie(name: string, value: string) {
 
 function deleteCookie(name: string) {
   document.cookie = `${name}=; Path=/; Max-Age=0; SameSite=Lax`;
+  document.cookie = `${name}=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT; SameSite=Lax`;
+}
+
+function clearPersistedSession() {
+  window.localStorage.removeItem(AUTH_STORAGE_KEY);
+  deleteCookie(AUTH_COOKIE_KEY);
 }
 
 export const authStorage = {
@@ -38,20 +44,22 @@ export const authStorage = {
 
       return session;
     } catch {
-      window.localStorage.removeItem(AUTH_STORAGE_KEY);
-      deleteCookie(AUTH_COOKIE_KEY);
+      clearPersistedSession();
       return null;
     }
   },
 
   set(session: AuthSession | null) {
     if (!session) {
-      window.localStorage.removeItem(AUTH_STORAGE_KEY);
-      deleteCookie(AUTH_COOKIE_KEY);
+      clearPersistedSession();
       return;
     }
 
     setCookie(AUTH_COOKIE_KEY, JSON.stringify(session));
     window.localStorage.removeItem(AUTH_STORAGE_KEY);
+  },
+
+  clear() {
+    clearPersistedSession();
   },
 };
