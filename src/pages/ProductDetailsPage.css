@@ -59,7 +59,7 @@
 
 .details-actions {
   display: flex;
-  gap: 12px;
+  justify-content: flex-start;
 }
 
 .details-back-link {
@@ -248,17 +248,22 @@
   border-radius: 6px;
   color: #394255;
   display: inline-flex;
-  flex: 0 0 48px;
+  gap: 10px;
+  flex: 0 1 auto;
+  font-weight: 900;
   height: 48px;
   justify-content: center;
+  min-width: 210px;
+  padding: 0 18px;
   transition:
     border-color 0.2s ease,
+    background 0.2s ease,
     color 0.2s ease,
     transform 0.2s ease;
-  width: 48px;
 }
 
 .details-share-action:hover {
+  background: #f7f8fc;
   border-color: var(--primary);
   color: var(--primary);
   transform: translateY(-1px);
@@ -270,9 +275,15 @@
 }
 
 .details-share-action svg {
+  flex: 0 0 auto;
   fill: currentColor;
   height: 20px;
   width: 20px;
+}
+
+.details-share-action span {
+  font-size: 0.94rem;
+  line-height: 1;
 }
 
 .details-secondary-actions {

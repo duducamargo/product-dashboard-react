@@ -1,11 +1,7 @@
 import { Link } from "react-router-dom";
 import type { Product } from "@/types/product";
+import { currencyFormatter } from "@/utils/formatters";
 import { formatProductCategory } from "@/utils/productCategory";
-
-const currencyFormatter = new Intl.NumberFormat("pt-BR", {
-  currency: "USD",
-  style: "currency",
-});
 
 type ProductCardProps = {
   product: Product;

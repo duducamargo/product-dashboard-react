@@ -1,5 +1,6 @@
 import type { ProductReview } from "@/types/product";
-import { formatReviewDate, getNumber } from "@/utils/productDetails";
+import { formatReviewDate } from "@/utils/formatters";
+import { getNumber } from "@/utils/productDetails";
 
 type ProductReviewsProps = {
   productRating: number;

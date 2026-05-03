@@ -1,14 +1,3 @@
-export const productCurrencyFormatter = new Intl.NumberFormat("pt-BR", {
-  currency: "USD",
-  style: "currency",
-});
-
-const reviewDateFormatter = new Intl.DateTimeFormat("pt-BR", {
-  day: "2-digit",
-  month: "long",
-  year: "numeric",
-});
-
 export function getProductId(value: string | undefined) {
   const productId = Number(value);
 
@@ -47,12 +36,6 @@ export function translateAvailabilityStatus(status?: string) {
   return status ? (translations[status] ?? status) : "Em estoque";
 }
 
-export function formatReviewDate(value: string) {
-  const date = new Date(value);
-
-  return Number.isNaN(date.getTime()) ? "Data nao informada" : reviewDateFormatter.format(date);
-}
-
 export async function copyTextToClipboard(value: string) {
   if (navigator.clipboard?.writeText) {
     await navigator.clipboard.writeText(value);
@@ -68,4 +51,25 @@ export async function copyTextToClipboard(value: string) {
   linkField.select();
   document.execCommand("copy");
   document.body.removeChild(linkField);
+}
+
+export async function shareProductLink(url: string) {
+  if (navigator.share) {
+    try {
+      await navigator.share({
+        title: document.title,
+        text: "Confira este produto",
+        url,
+      });
+
+      return false;
+    } catch (error) {
+      if (error instanceof DOMException && error.name === "AbortError") {
+        return false;
+      }
+    }
+  }
+
+  await copyTextToClipboard(url);
+  return true;
 }

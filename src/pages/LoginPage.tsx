@@ -2,6 +2,7 @@ import { Navigate, useLocation, useNavigate } from "react-router-dom";
 import { AuthPageLayout } from "@/components/auth/AuthPageLayout";
 import { LoginForm } from "@/components/auth/LoginForm";
 import { useAuth } from "@/hooks/useAuth";
+import { appPaths } from "@/routes/paths";
 import type { LoginInput } from "@/schemas/loginSchema";
 
 export function LoginPage() {
@@ -18,7 +19,7 @@ export function LoginPage() {
     "pathname" in location.state.from &&
     typeof location.state.from.pathname === "string"
       ? location.state.from.pathname
-      : "/home";
+      : appPaths.home;
 
   async function handleLogin(input: LoginInput) {
     await signIn(input);

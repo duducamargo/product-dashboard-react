@@ -1,5 +1,6 @@
 import type { Product } from "@/types/product";
-import { productCurrencyFormatter, translateAvailabilityStatus } from "@/utils/productDetails";
+import { currencyFormatter } from "@/utils/formatters";
+import { translateAvailabilityStatus } from "@/utils/productDetails";
 
 type ProductInfoPanelProps = {
   product: Product;
@@ -49,8 +50,8 @@ export function ProductInfoPanel({
       </div>
 
       <div className="details-price-row">
-        <strong>{productCurrencyFormatter.format(productPrice)}</strong>
-        {originalPrice ? <span>{productCurrencyFormatter.format(originalPrice)}</span> : null}
+        <strong>{currencyFormatter.format(productPrice)}</strong>
+        {originalPrice ? <span>{currencyFormatter.format(originalPrice)}</span> : null}
       </div>
 
       <div className="details-divider" />
@@ -62,7 +63,7 @@ export function ProductInfoPanel({
 
       <div className="details-highlights">
         <span>{product.warrantyInformation ?? "Garantia nao informada"}</span>
-        <span>{product.shippingInformation ?? "Envio informado no checkout"}</span>
+        <span>{product.shippingInformation ?? "Envio nao informado"}</span>
         <span>{product.returnPolicy ?? "Politica de devolucao indisponivel"}</span>
         <span>Pedido minimo: {product.minimumOrderQuantity ?? 1}</span>
         <span>Estoque: {productStock} unidades</span>
@@ -72,9 +73,6 @@ export function ProductInfoPanel({
       <div className="details-divider" />
 
       <div className="details-actions">
-        <button className="details-primary-action" type="button">
-          Adicionar ao carrinho
-        </button>
         <button
           className="details-share-action"
           type="button"
@@ -83,6 +81,7 @@ export function ProductInfoPanel({
           onClick={onShareProduct}
         >
           <ShareIcon />
+          <span>{hasCopiedProductLink ? "Link copiado" : "Compartilhar produto"}</span>
         </button>
       </div>
     </section>
