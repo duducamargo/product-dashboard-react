@@ -325,23 +325,9 @@ export function ProductDetailsPage() {
                 <p>{productTags.length > 0 ? productTags.join(", ") : "Sem tags cadastradas."}</p>
               </article>
               <article>
-                <span>Estoque</span>
-                <h3>{productStock} unidades</h3>
-                <p>{translateAvailabilityStatus(product.availabilityStatus)} para compra no catalogo.</p>
-              </article>
-              <article>
                 <span>Identificacao</span>
-                <h3>{product.sku}</h3>
-                <p>Codigo de barras: {product.meta?.barcode ?? "Nao informado"}.</p>
-              </article>
-              <article>
-                <span>Compra</span>
-                <h3>Minimo de {product.minimumOrderQuantity ?? 1} unidade(s)</h3>
-                <p>
-                  {discountPercentage > 0
-                    ? `Desconto aplicado de ${discountPercentage.toFixed(2)}%.`
-                    : "Produto sem desconto ativo."}
-                </p>
+                <h3>Codigo de barras</h3>
+                <p>{product.meta?.barcode ?? "Nao informado"}.</p>
               </article>
             </div>
           </section>
