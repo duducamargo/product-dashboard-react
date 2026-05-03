@@ -62,7 +62,7 @@ export function ProductInfoPanel({
 
       <div className="details-highlights">
         <span>{product.warrantyInformation ?? "Garantia nao informada"}</span>
-        <span>{product.shippingInformation ?? "Envio informado no checkout"}</span>
+        <span>{product.shippingInformation ?? "Envio nao informado"}</span>
         <span>{product.returnPolicy ?? "Politica de devolucao indisponivel"}</span>
         <span>Pedido minimo: {product.minimumOrderQuantity ?? 1}</span>
         <span>Estoque: {productStock} unidades</span>
@@ -72,9 +72,6 @@ export function ProductInfoPanel({
       <div className="details-divider" />
 
       <div className="details-actions">
-        <button className="details-primary-action" type="button">
-          Adicionar ao carrinho
-        </button>
         <button
           className="details-share-action"
           type="button"
@@ -83,6 +80,7 @@ export function ProductInfoPanel({
           onClick={onShareProduct}
         >
           <ShareIcon />
+          <span>{hasCopiedProductLink ? "Link copiado" : "Compartilhar produto"}</span>
         </button>
       </div>
     </section>
