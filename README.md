@@ -31,7 +31,32 @@ VITE_API_BASE_URL=https://dummyjson.com
 - `npm run dev`: inicia o projeto em modo desenvolvimento.
 - `npm run build`: valida TypeScript e gera o build de producao.
 - `npm run preview`: executa uma previa local do build.
+- `npm run start`: serve o build gerado em `dist/`, respeitando a porta `PORT`.
 - `npm run lint`: executa a analise estatica com ESLint.
+
+## Deploy no Railway
+
+O projeto esta preparado para deploy no Railway com Nixpacks.
+
+Arquivos relevantes:
+
+- `railway.json`: define o comando de build e start.
+- `scripts/serve.mjs`: servidor estatico em Node para servir o build de producao.
+
+Comandos usados no Railway:
+
+```bash
+npm run build
+npm run start
+```
+
+O servidor usa automaticamente a porta dinamica fornecida pelo Railway:
+
+```txt
+process.env.PORT
+```
+
+Se `PORT` nao estiver definido localmente, o fallback e `4173`.
 
 ## Login de teste
 
