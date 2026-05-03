@@ -1,96 +1,26 @@
-import { Component, type ReactNode, useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { AppFooter } from "@/components/layout/AppFooter";
 import { StoreHeader } from "@/components/layout/StoreHeader";
+import { ProductBreadcrumb } from "@/components/product-details/ProductBreadcrumb";
+import { ProductDetailsErrorBoundary } from "@/components/product-details/ProductDetailsErrorBoundary";
+import { ProductDetailsState } from "@/components/product-details/ProductDetailsState";
+import { ProductGallery } from "@/components/product-details/ProductGallery";
+import { ProductInfoPanel } from "@/components/product-details/ProductInfoPanel";
+import { ProductReviews } from "@/components/product-details/ProductReviews";
+import { ProductTechnicalSpecs } from "@/components/product-details/ProductTechnicalSpecs";
 import { useAuth } from "@/hooks/useAuth";
 import { useProduct, useProductSuggestions } from "@/hooks/useProducts";
+import type { Product } from "@/types/product";
+import {
+  copyTextToClipboard,
+  getGalleryImages,
+  getNumber,
+  getProductId,
+  isNotFoundError,
+} from "@/utils/productDetails";
 import "@/pages/HomePage.css";
 import "@/pages/ProductDetailsPage.css";
-
-const currencyFormatter = new Intl.NumberFormat("pt-BR", {
-  currency: "USD",
-  style: "currency",
-});
-
-const dateFormatter = new Intl.DateTimeFormat("pt-BR", {
-  day: "2-digit",
-  month: "long",
-  year: "numeric",
-});
-
-function getProductId(value: string | undefined) {
-  const productId = Number(value);
-
-  return Number.isInteger(productId) && productId > 0 ? productId : null;
-}
-
-function isNotFoundError(error: unknown) {
-  if (!error || typeof error !== "object") {
-    return false;
-  }
-
-  return (error as { response?: { status?: number } }).response?.status === 404;
-}
-
-function getNumber(value: unknown, fallback = 0) {
-  return typeof value === "number" && Number.isFinite(value) ? value : fallback;
-}
-
-function getGalleryImages(thumbnail: string, images: string[]) {
-  const uniqueImages = Array.from(new Set([thumbnail, ...images].filter(Boolean)));
-
-  if (uniqueImages.length < 2) {
-    return uniqueImages;
-  }
-
-  return [uniqueImages[1], uniqueImages[0], ...uniqueImages.slice(2)];
-}
-
-function translateAvailabilityStatus(status?: string) {
-  const translations: Record<string, string> = {
-    "In Stock": "Em estoque",
-    "Low Stock": "Estoque baixo",
-    "Out of Stock": "Sem estoque",
-  };
-
-  return status ? (translations[status] ?? status) : "Em estoque";
-}
-
-function formatReviewDate(value: string) {
-  const date = new Date(value);
-
-  return Number.isNaN(date.getTime()) ? "Data nao informada" : dateFormatter.format(date);
-}
-
-type DetailsErrorBoundaryState = {
-  hasError: boolean;
-};
-
-class DetailsErrorBoundary extends Component<{ children: ReactNode }, DetailsErrorBoundaryState> {
-  state: DetailsErrorBoundaryState = { hasError: false };
-
-  static getDerivedStateFromError() {
-    return { hasError: true };
-  }
-
-  render() {
-    if (this.state.hasError) {
-      return (
-        <main className="product-details-page">
-          <section className="details-state">
-            <h1>Nao foi possivel exibir o produto</h1>
-            <p>Encontramos um problema ao montar os dados deste produto.</p>
-            <Link className="details-primary-action" to="/home">
-              Voltar ao catalogo
-            </Link>
-          </section>
-        </main>
-      );
-    }
-
-    return this.props.children;
-  }
-}
 
 export function ProductDetailsPage() {
   const { id } = useParams();
@@ -103,24 +33,34 @@ export function ProductDetailsPage() {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [hasCopiedProductLink, setHasCopiedProductLink] = useState(false);
   const suggestionsQuery = useProductSuggestions(headerSearch);
-  const headerSearchConfig = {
-    isLoading: suggestionsQuery.isLoading || suggestionsQuery.isSearching,
-    value: headerSearch,
-    suggestions: suggestionsQuery.data ?? [],
-    onChange: setHeaderSearch,
-    onSelect: (selectedProduct: { id: number; title: string }) => {
-      setHeaderSearch(selectedProduct.title);
-      navigate(`/products/${selectedProduct.id}`);
-    },
-  };
+
+  const headerSearchConfig = useMemo(
+    () => ({
+      isLoading: suggestionsQuery.isLoading || suggestionsQuery.isSearching,
+      value: headerSearch,
+      suggestions: suggestionsQuery.data ?? [],
+      onChange: setHeaderSearch,
+      onSelect: (selectedProduct: Product) => {
+        setHeaderSearch(selectedProduct.title);
+        navigate(`/products/${selectedProduct.id}`);
+      },
+    }),
+    [
+      headerSearch,
+      navigate,
+      suggestionsQuery.data,
+      suggestionsQuery.isLoading,
+      suggestionsQuery.isSearching,
+    ]
+  );
+
   const productImages = useMemo(
     () => (product ? getGalleryImages(product.thumbnail, product.images ?? []) : []),
     [product]
   );
+
   const currentImage = selectedImage ?? productImages[0];
-  const reviewCount = product?.reviews?.length ?? 0;
   const hasNotFound = productId === null || isNotFoundError(productQuery.error);
-  const dimensions = product?.dimensions;
   const productTags = product?.tags ?? [];
   const productRating = getNumber(product?.rating);
   const productPrice = getNumber(product?.price);
@@ -138,22 +78,7 @@ export function ProductDetailsPage() {
   }, [product?.id]);
 
   async function handleShareProduct() {
-    const productUrl = window.location.href;
-
-    if (navigator.clipboard?.writeText) {
-      await navigator.clipboard.writeText(productUrl);
-    } else {
-      const linkField = document.createElement("textarea");
-      linkField.value = productUrl;
-      linkField.setAttribute("readonly", "");
-      linkField.style.position = "fixed";
-      linkField.style.opacity = "0";
-      document.body.appendChild(linkField);
-      linkField.select();
-      document.execCommand("copy");
-      document.body.removeChild(linkField);
-    }
-
+    await copyTextToClipboard(window.location.href);
     setHasCopiedProductLink(true);
     window.setTimeout(() => setHasCopiedProductLink(false), 1800);
   }
@@ -174,15 +99,12 @@ export function ProductDetailsPage() {
     return (
       <div className="store-page">
         <StoreHeader onSignOut={signOut} search={headerSearchConfig} />
-        <main className="product-details-page">
-          <section className="details-state">
-            <h1>Produto nao encontrado</h1>
-            <p>O produto solicitado nao existe ou nao esta mais disponivel no catalogo.</p>
-            <Link className="details-primary-action" to="/home">
-              Voltar ao catalogo
-            </Link>
-          </section>
-        </main>
+        <ProductDetailsState
+          actionLabel="Voltar ao catalogo"
+          actionTo="/home"
+          description="O produto solicitado nao existe ou nao esta mais disponivel no catalogo."
+          title="Produto nao encontrado"
+        />
         <AppFooter />
       </div>
     );
@@ -192,15 +114,12 @@ export function ProductDetailsPage() {
     return (
       <div className="store-page">
         <StoreHeader onSignOut={signOut} search={headerSearchConfig} />
-        <main className="product-details-page">
-          <section className="details-state">
-            <h1>Nao foi possivel carregar o produto</h1>
-            <p>Verifique sua conexao e tente novamente.</p>
-            <button className="details-primary-action" type="button" onClick={() => productQuery.refetch()}>
-              Tentar novamente
-            </button>
-          </section>
-        </main>
+        <ProductDetailsState
+          actionLabel="Tentar novamente"
+          description="Verifique sua conexao e tente novamente."
+          title="Nao foi possivel carregar o produto"
+          onAction={() => productQuery.refetch()}
+        />
         <AppFooter />
       </div>
     );
@@ -210,158 +129,45 @@ export function ProductDetailsPage() {
     <div className="store-page">
       <StoreHeader onSignOut={signOut} search={headerSearchConfig} />
 
-      <DetailsErrorBoundary>
+      <ProductDetailsErrorBoundary>
         <main className="product-details-page">
-          <nav className="details-breadcrumb" aria-label="Breadcrumb">
-            <Link to="/home">Home</Link>
-            <span aria-hidden="true">›</span>
-            <span>{product.category}</span>
-            <span aria-hidden="true">›</span>
-            <strong>{product.title}</strong>
-          </nav>
+          <ProductBreadcrumb category={product.category} title={product.title} />
 
           <Link className="details-back-link" to="/home">
             {"\u2190"} Voltar ao catalogo
           </Link>
 
           <section className="details-main">
-            <div className="details-gallery">
-              <div className="details-main-image">
-                <img src={currentImage ?? product.thumbnail} alt={product.title} />
-              </div>
+            <ProductGallery
+              currentImage={currentImage}
+              fallbackImage={product.thumbnail}
+              images={productImages}
+              title={product.title}
+              onImageSelect={setSelectedImage}
+            />
 
-              <div className="details-thumbnails" aria-label="Imagens do produto">
-                {productImages.slice(0, 4).map((image) => (
-                  <button
-                    className="details-thumbnail"
-                    data-active={image === currentImage}
-                    key={image}
-                    type="button"
-                    onClick={() => setSelectedImage(image)}
-                  >
-                    <img src={image} alt="" aria-hidden="true" />
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            <section className="details-info" aria-labelledby="product-title">
-              <span className="details-stock-badge">
-                {translateAvailabilityStatus(product.availabilityStatus)}
-              </span>
-              <h1 id="product-title">{product.title}</h1>
-              <p className="details-model">
-                SKU: {product.sku} | Marca: {product.brand ?? "Nao informada"}
-              </p>
-
-              <div className="details-rating" aria-label={`Avaliacao ${productRating.toFixed(1)}`}>
-                <span>{"\u2605\u2605\u2605\u2605\u2605"}</span>
-                <strong>{productRating.toFixed(1)}</strong>
-                {reviewCount > 0 ? <small>({reviewCount} avaliacoes)</small> : null}
-              </div>
-
-              <div className="details-price-row">
-                <strong>{currencyFormatter.format(productPrice)}</strong>
-                {originalPrice ? <span>{currencyFormatter.format(originalPrice)}</span> : null}
-              </div>
-
-              <div className="details-divider" />
-
-              <section className="details-description">
-                <h2>Descricao</h2>
-                <p>{product.description}</p>
-              </section>
-
-              <div className="details-highlights">
-                <span>{product.warrantyInformation ?? "Garantia nao informada"}</span>
-                <span>{product.shippingInformation ?? "Envio informado no checkout"}</span>
-                <span>{product.returnPolicy ?? "Politica de devolucao indisponivel"}</span>
-                <span>Pedido minimo: {product.minimumOrderQuantity ?? 1}</span>
-                <span>Estoque: {productStock} unidades</span>
-                <span>Desconto: {discountPercentage.toFixed(2)}%</span>
-              </div>
-
-              <div className="details-divider" />
-
-              <div className="details-actions">
-                <button className="details-primary-action" type="button">
-                  Adicionar ao carrinho
-                </button>
-                <button
-                  className="details-share-action"
-                  type="button"
-                  aria-label={hasCopiedProductLink ? "Link copiado" : "Copiar link completo do produto"}
-                  title={hasCopiedProductLink ? "Link copiado" : "Copiar link completo do produto"}
-                  onClick={() => void handleShareProduct()}
-                >
-                  <svg aria-hidden="true" focusable="false" viewBox="0 0 24 24">
-                    <path d="M18 16.1c-.76 0-1.44.3-1.96.77L8.91 12.7a3.27 3.27 0 0 0 0-1.39l7.05-4.13A2.99 2.99 0 1 0 15 5c0 .24.03.47.08.69L8.03 9.82a3 3 0 1 0 0 4.36l7.12 4.18c-.04.2-.06.42-.06.64A2.91 2.91 0 1 0 18 16.1Z" />
-                  </svg>
-                </button>
-              </div>
-            </section>
+            <ProductInfoPanel
+              discountPercentage={discountPercentage}
+              hasCopiedProductLink={hasCopiedProductLink}
+              originalPrice={originalPrice}
+              product={product}
+              productPrice={productPrice}
+              productRating={productRating}
+              productStock={productStock}
+              reviewCount={productReviews.length}
+              onShareProduct={() => void handleShareProduct()}
+            />
           </section>
 
-          <section className="technical-specs" aria-labelledby="technical-specs-title">
-            <h2 id="technical-specs-title">Especificacoes tecnicas</h2>
-            <div className="technical-specs-grid">
-              <article>
-                <span>Peso</span>
-                <h3>{productWeight} kg</h3>
-                <p>Peso aproximado do produto conforme retorno da API.</p>
-              </article>
-              <article>
-                <span>Dimensoes</span>
-                <h3>
-                  {dimensions
-                    ? `${dimensions.width} x ${dimensions.height} x ${dimensions.depth} cm`
-                    : "Nao informado"}
-                </h3>
-                <p>Largura, altura e profundidade cadastradas para o item.</p>
-              </article>
-              <article>
-                <span>Categoria</span>
-                <h3>{product.category}</h3>
-                <p>{productTags.length > 0 ? productTags.join(", ") : "Sem tags cadastradas."}</p>
-              </article>
-              <article>
-                <span>Identificacao</span>
-                <h3>Codigo de barras</h3>
-                <p>{product.meta?.barcode ?? "Nao informado"}.</p>
-              </article>
-            </div>
-          </section>
+          <ProductTechnicalSpecs
+            product={product}
+            productTags={productTags}
+            productWeight={productWeight}
+          />
 
-          <section className="product-reviews" aria-labelledby="product-reviews-title">
-            <div className="product-reviews-heading">
-              <div>
-                <span>Avaliacoes</span>
-                <h2 id="product-reviews-title">O que os usuarios dizem</h2>
-              </div>
-              <strong>{productRating.toFixed(1)} / 5</strong>
-            </div>
-
-            {productReviews.length > 0 ? (
-              <div className="product-reviews-grid">
-                {productReviews.map((review) => (
-                  <article className="product-review-card" key={`${review.reviewerEmail}-${review.date}`}>
-                    <div className="product-review-card-header">
-                      <div>
-                        <h3>{review.reviewerName}</h3>
-                        <p>{formatReviewDate(review.date)}</p>
-                      </div>
-                      <strong>{getNumber(review.rating).toFixed(1)}</strong>
-                    </div>
-                    <p>{review.comment}</p>
-                  </article>
-                ))}
-              </div>
-            ) : (
-              <p className="product-reviews-empty">Este produto ainda nao possui avaliacoes.</p>
-            )}
-          </section>
+          <ProductReviews productRating={productRating} reviews={productReviews} />
         </main>
-      </DetailsErrorBoundary>
+      </ProductDetailsErrorBoundary>
 
       <AppFooter />
     </div>
