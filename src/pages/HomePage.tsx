@@ -1,4 +1,5 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import { HomeHero } from "@/components/home/HomeHero";
 import { ProductFilters } from "@/components/home/ProductFilters";
 import { ProductsGrid } from "@/components/home/ProductsGrid";
@@ -28,14 +29,22 @@ function toOptionalNumber(value: string) {
   return Number.isFinite(parsedValue) ? parsedValue : undefined;
 }
 
+function getPageFromSearchParams(searchParams: URLSearchParams) {
+  const page = Number(searchParams.get("page"));
+
+  return Number.isInteger(page) && page > 0 ? page : 1;
+}
+
 export function HomePage() {
   const { signOut } = useAuth();
-  const [search, setSearch] = useState("");
-  const [category, setCategory] = useState("");
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [search, setSearch] = useState(() => searchParams.get("search") ?? "");
+  const [category, setCategory] = useState(() => searchParams.get("category") ?? "");
   const [isCategoryFilterOpen, setIsCategoryFilterOpen] = useState(true);
-  const [minPrice, setMinPrice] = useState("");
-  const [maxPrice, setMaxPrice] = useState("");
-  const [page, setPage] = useState(1);
+  const [minPrice, setMinPrice] = useState(() => searchParams.get("minPrice") ?? "");
+  const [maxPrice, setMaxPrice] = useState(() => searchParams.get("maxPrice") ?? "");
+  const [page, setPage] = useState(() => getPageFromSearchParams(searchParams));
+  const hasMounted = useRef(false);
 
   const filters = useMemo(
     () => ({
@@ -62,8 +71,39 @@ export function HomePage() {
   const hasRequestError = productsQuery.isError || categoriesQuery.isError;
 
   useEffect(() => {
+    if (!hasMounted.current) {
+      hasMounted.current = true;
+      return;
+    }
+
     setPage(1);
   }, [category, maxPrice, minPrice, search]);
+
+  useEffect(() => {
+    const nextParams = new URLSearchParams();
+
+    if (search.trim()) {
+      nextParams.set("search", search.trim());
+    }
+
+    if (category) {
+      nextParams.set("category", category);
+    }
+
+    if (minPrice) {
+      nextParams.set("minPrice", minPrice);
+    }
+
+    if (maxPrice) {
+      nextParams.set("maxPrice", maxPrice);
+    }
+
+    if (page > 1) {
+      nextParams.set("page", String(page));
+    }
+
+    setSearchParams(nextParams, { replace: true });
+  }, [category, maxPrice, minPrice, page, search, setSearchParams]);
 
   function handleClearFilters() {
     setSearch("");

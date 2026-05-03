@@ -66,6 +66,11 @@ function UserIcon() {
 export function StoreHeader({ onSignOut, search }: StoreHeaderProps) {
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
 
+  function handleSignOut() {
+    setIsUserMenuOpen(false);
+    onSignOut();
+  }
+
   return (
     <header className={search ? "store-header store-header-with-search" : "store-header"}>
       <Link className="store-brand" to="/home" aria-label="TechStore home">
@@ -112,7 +117,7 @@ export function StoreHeader({ onSignOut, search }: StoreHeaderProps) {
               </span>
             </div>
 
-            <button className="header-user-action" type="button" role="menuitem" onClick={onSignOut}>
+            <button className="header-user-action" type="button" role="menuitem" onClick={handleSignOut}>
               <LogoutIcon />
               <span>Sair</span>
             </button>
