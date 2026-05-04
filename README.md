@@ -2,7 +2,7 @@
 
 Aplicacao web em React para autenticacao, listagem, busca, filtragem e visualizacao de detalhes de produtos consumindo a API publica DummyJSON.
 
-O projeto foi desenvolvido com foco nos criterios do teste tecnico: estrutura escalavel, consumo de API, gerenciamento de estado local e remoto, separacao de responsabilidades, legibilidade e boa experiencia de uso em desktop e mobile.
+O projeto foi desenvolvido com foco nos criterios de: estrutura escalavel, consumo de API, gerenciamento de estado local e remoto, separacao de responsabilidades, legibilidade e boa experiencia de uso em desktop e mobile.
 
 ## Stack
 
