@@ -14,7 +14,7 @@ export function ProductTechnicalSpecs({
 }: ProductTechnicalSpecsProps) {
   return (
     <section className="technical-specs" aria-labelledby="technical-specs-title">
-      <h2 id="technical-specs-title">Especificacoes tecnicas</h2>
+      <h2 id="technical-specs-title">Especificações técnicas</h2>
       <div className="technical-specs-grid">
         <article>
           <span>Peso</span>
@@ -22,11 +22,11 @@ export function ProductTechnicalSpecs({
           <p>Peso aproximado do produto conforme retorno da API.</p>
         </article>
         <article>
-          <span>Dimensoes</span>
+          <span>Dimensões</span>
           <h3>
             {product.dimensions
               ? `${product.dimensions.width} x ${product.dimensions.height} x ${product.dimensions.depth} cm`
-              : "Nao informado"}
+              : "Não informado"}
           </h3>
           <p>Largura, altura e profundidade cadastradas para o item.</p>
         </article>
@@ -36,9 +36,9 @@ export function ProductTechnicalSpecs({
           <p>{productTags.length > 0 ? productTags.join(", ") : "Sem tags cadastradas."}</p>
         </article>
         <article>
-          <span>Identificacao</span>
-          <h3>Codigo de barras</h3>
-          <p>{product.meta?.barcode ?? "Nao informado"}.</p>
+          <span>Identificação</span>
+          <h3>Código de barras</h3>
+          <p>{product.meta?.barcode ?? "Não informado"}.</p>
         </article>
       </div>
     </section>

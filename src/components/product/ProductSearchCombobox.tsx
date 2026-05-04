@@ -76,7 +76,7 @@ export function ProductSearchCombobox({
           className="product-search-popover"
           id={id}
           role="listbox"
-          aria-label="Sugestoes de produtos"
+          aria-label="Sugestões de produtos"
         >
           {isLoading ? <span className="product-search-status">Buscando produtos...</span> : null}
 
@@ -99,7 +99,7 @@ export function ProductSearchCombobox({
                     <strong>{product.title}</strong>
                     <small>{formatProductCategory(product.category)}</small>
                   </span>
-                  <em aria-label={`Avaliacao ${product.rating.toFixed(1)}`}>
+                  <em aria-label={`Avaliação ${product.rating.toFixed(1)}`}>
                     {"\u2605"} {product.rating.toFixed(1)}
                   </em>
                 </button>

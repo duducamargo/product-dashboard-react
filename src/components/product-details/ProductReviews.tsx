@@ -12,8 +12,8 @@ export function ProductReviews({ productRating, reviews }: ProductReviewsProps) 
     <section className="product-reviews" aria-labelledby="product-reviews-title">
       <div className="product-reviews-heading">
         <div>
-          <span>Avaliacoes</span>
-          <h2 id="product-reviews-title">O que os usuarios dizem</h2>
+          <span>Avaliações</span>
+          <h2 id="product-reviews-title">O que os usuários dizem</h2>
         </div>
         <strong>{productRating.toFixed(1)} / 5</strong>
       </div>
@@ -34,7 +34,7 @@ export function ProductReviews({ productRating, reviews }: ProductReviewsProps) 
           ))}
         </div>
       ) : (
-        <p className="product-reviews-empty">Este produto ainda nao possui avaliacoes.</p>
+        <p className="product-reviews-empty">Este produto ainda não possui avaliações.</p>
       )}
     </section>
   );

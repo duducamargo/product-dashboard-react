@@ -40,13 +40,13 @@ export function ProductInfoPanel({
       </span>
       <h1 id="product-title">{product.title}</h1>
       <p className="details-model">
-        SKU: {product.sku} | Marca: {product.brand ?? "Nao informada"}
+        SKU: {product.sku} | Marca: {product.brand ?? "Não informada"}
       </p>
 
-      <div className="details-rating" aria-label={`Avaliacao ${productRating.toFixed(1)}`}>
+      <div className="details-rating" aria-label={`Avaliação ${productRating.toFixed(1)}`}>
         <span>{"\u2605\u2605\u2605\u2605\u2605"}</span>
         <strong>{productRating.toFixed(1)}</strong>
-        {reviewCount > 0 ? <small>({reviewCount} avaliacoes)</small> : null}
+        {reviewCount > 0 ? <small>({reviewCount} avaliações)</small> : null}
       </div>
 
       <div className="details-price-row">
@@ -57,15 +57,15 @@ export function ProductInfoPanel({
       <div className="details-divider" />
 
       <section className="details-description">
-        <h2>Descricao</h2>
+        <h2>Descrição</h2>
         <p>{product.description}</p>
       </section>
 
       <div className="details-highlights">
-        <span>{product.warrantyInformation ?? "Garantia nao informada"}</span>
-        <span>{product.shippingInformation ?? "Envio nao informado"}</span>
-        <span>{product.returnPolicy ?? "Politica de devolucao indisponivel"}</span>
-        <span>Pedido minimo: {product.minimumOrderQuantity ?? 1}</span>
+        <span>{product.warrantyInformation ?? "Garantia não informada"}</span>
+        <span>{product.shippingInformation ?? "Envio não informado"}</span>
+        <span>{product.returnPolicy ?? "Política de devolução indisponível"}</span>
+        <span>Pedido mínimo: {product.minimumOrderQuantity ?? 1}</span>
         <span>Estoque: {productStock} unidades</span>
         <span>Desconto: {discountPercentage.toFixed(2)}%</span>
       </div>

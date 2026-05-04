@@ -9,7 +9,7 @@ const FEATURES = [
 
 export function LoginFeatureList() {
   return (
-    <ul className="login-features" aria-label="Destaques da aplicacao">
+    <ul className="login-features" aria-label="Destaques da aplicação">
       {FEATURES.map((feature) => (
         <li key={feature.label}>
           <AuthIcon name={feature.icon} size={17} />
