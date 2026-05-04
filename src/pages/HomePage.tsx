@@ -164,8 +164,8 @@ export function HomePage() {
             {hasRequestError ? (
               <ProductsState
                 actionLabel="Tentar novamente"
-                description="Verifique sua conexao e tente novamente."
-                title="Nao foi possivel carregar os produtos"
+                description="Verifique sua conexão e tente novamente."
+                title="Não foi possível carregar os produtos"
                 role="alert"
                 variant="error"
                 onAction={handleRetry}
@@ -187,7 +187,7 @@ export function HomePage() {
                 {!isInitialLoading && products.length === 0 ? (
                   <ProductsState
                     actionLabel="Limpar filtros"
-                    description="Buscamos em todo o catalogo, mas nenhum produto corresponde aos filtros atuais."
+                    description="Buscamos em todo o catálogo, mas nenhum produto corresponde aos filtros atuais."
                     title="Nenhum produto encontrado"
                     onAction={handleClearFilters}
                   />

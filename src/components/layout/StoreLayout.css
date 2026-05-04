@@ -328,6 +328,10 @@
     display: none;
   }
 
+  .header-user-menu {
+    margin-left: auto;
+  }
+
   .mobile-product-search {
     display: block;
     grid-column: 1 / -1;

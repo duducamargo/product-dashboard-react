@@ -34,7 +34,7 @@ export function ProductsPagination({
         type="button"
         onClick={() => onPageChange(Math.max(currentPage - 1, 1))}
         disabled={currentPage === 1}
-        aria-label="Pagina anterior"
+        aria-label="Página anterior"
       >
         {"\u2039"}
       </button>
@@ -63,7 +63,7 @@ export function ProductsPagination({
         type="button"
         onClick={() => onPageChange(Math.min(currentPage + 1, totalPages))}
         disabled={currentPage === totalPages}
-        aria-label="Proxima pagina"
+        aria-label="Próxima página"
       >
         {"\u203A"}
       </button>

@@ -12,5 +12,5 @@ const reviewDateFormatter = new Intl.DateTimeFormat("pt-BR", {
 export function formatReviewDate(value: string) {
   const date = new Date(value);
 
-  return Number.isNaN(date.getTime()) ? "Data nao informada" : reviewDateFormatter.format(date);
+  return Number.isNaN(date.getTime()) ? "Data não informada" : reviewDateFormatter.format(date);
 }

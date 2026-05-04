@@ -16,7 +16,7 @@ export function ProductCard({ product }: ProductCardProps) {
       <div className="product-card-content">
         <div className="product-kicker">
           <span>{formatProductCategory(product.category)}</span>
-          <strong aria-label={`Avaliacao ${product.rating.toFixed(1)}`}>
+          <strong aria-label={`Avaliação ${product.rating.toFixed(1)}`}>
             <span aria-hidden="true">{"\u2605"}</span>
             {product.rating.toFixed(1)}
           </strong>

@@ -76,10 +76,10 @@ export function ProductDetailsPage() {
     return (
       <StorePageLayout search={headerSearchConfig}>
         <NotFoundContent
-          actionLabel="Voltar ao catalogo"
+          actionLabel="Voltar ao catálogo"
           actionTo={appPaths.home}
-          description="O produto solicitado nao existe ou nao esta mais disponivel no catalogo."
-          title="Produto nao encontrado"
+          description="O produto solicitado não existe ou não está mais disponível no catálogo."
+          title="Produto não encontrado"
         />
       </StorePageLayout>
     );
@@ -90,8 +90,8 @@ export function ProductDetailsPage() {
       <StorePageLayout search={headerSearchConfig}>
         <ProductDetailsState
           actionLabel="Tentar novamente"
-          description="Verifique sua conexao e tente novamente."
-          title="Nao foi possivel carregar o produto"
+          description="Verifique sua conexão e tente novamente."
+          title="Não foi possível carregar o produto"
           onAction={() => productQuery.refetch()}
         />
       </StorePageLayout>
@@ -105,7 +105,7 @@ export function ProductDetailsPage() {
           <ProductBreadcrumb category={product.category} title={product.title} />
 
           <Link className="details-back-link" to={appPaths.home}>
-            {"\u2190"} Voltar ao catalogo
+            {"\u2190"} Voltar ao catálogo
           </Link>
 
           <section className="details-main">

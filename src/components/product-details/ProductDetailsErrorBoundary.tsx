@@ -20,10 +20,10 @@ export class ProductDetailsErrorBoundary extends Component<
       return (
         <main className="product-details-page">
           <section className="details-state">
-            <h1>Nao foi possivel exibir o produto</h1>
+            <h1>Não foi possível exibir o produto</h1>
             <p>Encontramos um problema ao montar os dados deste produto.</p>
             <Link className="details-primary-action" to="/home">
-              Voltar ao catalogo
+              Voltar ao catálogo
             </Link>
           </section>
         </main>

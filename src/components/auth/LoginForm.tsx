@@ -27,7 +27,7 @@ export function LoginForm({ onSubmit }: LoginFormProps) {
       await onSubmit(input);
     } catch {
       setError("root", {
-        message: "Usuario ou senha invalidos.",
+        message: "Usuário ou senha inválidos.",
       });
     }
   }
@@ -35,7 +35,7 @@ export function LoginForm({ onSubmit }: LoginFormProps) {
   return (
     <form className="auth-form" onSubmit={handleSubmit(submit)} noValidate>
       <label className="auth-field">
-        <span>Usuario</span>
+        <span>Usuário</span>
         <div className="input-control">
           <AuthIcon name="user" size={18} />
           <input

@@ -73,12 +73,12 @@ export function ProductFilters({
       </section>
 
       <div className="price-filter">
-        <span>Faixa de preco</span>
+        <span>Faixa de preço</span>
         <label>
           <input
             min="0"
             type="number"
-            placeholder="Minimo"
+            placeholder="Mínimo"
             value={minPrice}
             onChange={(event) => onMinPriceChange(event.target.value)}
           />
@@ -87,7 +87,7 @@ export function ProductFilters({
           <input
             min="0"
             type="number"
-            placeholder="Maximo"
+            placeholder="Máximo"
             value={maxPrice}
             onChange={(event) => onMaxPriceChange(event.target.value)}
           />

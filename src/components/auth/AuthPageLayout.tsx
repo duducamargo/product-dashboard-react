@@ -29,7 +29,7 @@ export function AuthPageLayout({
             <img className="auth-logo" src={techstoreIconUrl} alt="" aria-hidden="true" />
             <strong>TechStore</strong>
           </div>
-          <p>A escolha confiavel para hardware profissional.</p>
+          <p>A escolha confiável para hardware profissional.</p>
         </header>
 
         <section className="auth-card" aria-labelledby="auth-title">

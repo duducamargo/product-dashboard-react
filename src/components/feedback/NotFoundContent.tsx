@@ -22,9 +22,9 @@ function NotFoundIcon() {
 }
 
 export function NotFoundContent({
-  title = "Pagina nao encontrada",
-  description = "A rota acessada nao existe ou foi movida. Volte para o catalogo para continuar navegando pelos produtos.",
-  actionLabel = "Voltar ao catalogo",
+  title = "Página não encontrada",
+  description = "A rota acessada não existe ou foi movida. Volte para o catálogo para continuar navegando pelos produtos.",
+  actionLabel = "Voltar ao catálogo",
   actionTo = "/home",
 }: NotFoundContentProps) {
   return (

@@ -101,7 +101,7 @@ export function StoreHeader({ onSignOut, search }: StoreHeaderProps) {
         <button
           className="header-avatar-button"
           type="button"
-          aria-label="Abrir menu do usuario"
+          aria-label="Abrir menu do usuário"
           aria-haspopup="menu"
           aria-expanded={isUserMenuOpen}
           onClick={() => setIsUserMenuOpen((isOpen) => !isOpen)}
@@ -116,8 +116,8 @@ export function StoreHeader({ onSignOut, search }: StoreHeaderProps) {
                 <UserIcon />
               </span>
               <span>
-                <strong>Usuario</strong>
-                <small>Sessao ativa</small>
+                <strong>Usuário</strong>
+                <small>Sessão ativa</small>
               </span>
             </div>
 
