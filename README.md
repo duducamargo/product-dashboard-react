@@ -2,7 +2,7 @@
 
 Aplicacao web em React para autenticacao, listagem, busca, filtragem e visualizacao de detalhes de produtos consumindo a API publica DummyJSON.
 
-O projeto foi desenvolvido com foco nos criterios do teste tecnico: estrutura escalavel, consumo de API, gerenciamento de estado local e remoto, separacao de responsabilidades, legibilidade e boa experiencia de uso em desktop e mobile.
+O projeto foi desenvolvido com foco nos criterios de: estrutura escalavel, consumo de API, gerenciamento de estado local e remoto, separacao de responsabilidades, legibilidade e boa experiencia de uso em desktop e mobile.
 
 ## Stack
 
@@ -185,6 +185,7 @@ src/
 |-- assets/              # Assets estaticos, como o icone da marca
 |-- components/          # Componentes reutilizaveis por dominio visual
 |   |-- auth/            # Componentes da autenticacao
+|   |-- feedback/        # Estados visuais reutilizaveis, como Not Found
 |   |-- home/            # Componentes especificos da Home
 |   |-- layout/          # Layout compartilhado, header, footer e layout da loja
 |   |-- product/         # Componentes reutilizaveis de produto
